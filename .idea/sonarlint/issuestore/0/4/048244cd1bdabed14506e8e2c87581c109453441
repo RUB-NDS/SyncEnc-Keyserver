@@ -1,0 +1,40 @@
+
+wsquid:UselessImportCheck"NRemove this unused import 'org.opensaml.saml.saml2.metadata.IDPSSODescriptor'.(Ñš´Ó8©ÊñÑõ+
+Ğ%squid:RedundantThrowsDeclarationCheck"™Remove the declaration of thrown exception 'net.shibboleth.utilities.java.support.resolver.ResolverException', as it cannot be thrown from method's body.(­‚œ¹8£¤óÑõ+
+zsquid:UselessImportCheck"LRemove this unused import 'org.opensaml.saml.criterion.EntityRoleCriterion'.(€ã½àüÿÿÿÿ8©ÊñÑõ+
+hsquid:UselessImportCheck"?Remove this unused import 'java.security.cert.X509Certificate'.(å×â8ÖòÑõ+
+³%squid:RedundantThrowsDeclarationCheck"}Remove the declaration of thrown exception 'java.io.UnsupportedEncodingException', as it cannot be thrown from method's body.(­‚œ¹8£¤óÑõ+
+š%squid:RedundantThrowsDeclarationCheck"eRemove the declaration of thrown exception 'java.lang.RuntimeException' which is a runtime exception.(şíœ*8íÚ«Îõ+
+È%squid:RedundantThrowsDeclarationCheck"‘Remove the declaration of thrown exception 'org.opensaml.xmlsec.signature.support.SignatureException', as it cannot be thrown from method's body.(­‚œ¹8£¤óÑõ+
+ƒsquid:UselessImportCheck"URemove this unused import 'org.opensaml.xmlsec.signature.support.SignatureValidator'.(ßÆµ«üÿÿÿÿ8ÖòÑõ+
+ssquid:S00117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.( ÛÀ—úÿÿÿÿ8íÚ«Îõ+
+hsquid:S00103"KSplit this 286 characters long line (which is greater than 120 authorized).(­‚œ¹8ëàçĞõ+
+nsquid:S1142"MReduce the number of returns of this method 4, down to the maximum allowed 3.(…Í £ÿÿÿÿÿ8íÚ«Îõ+
+ssquid:S00117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Öƒ”½øÿÿÿÿ8íÚ«Îõ+
+nsquid:S1142"MReduce the number of returns of this method 4, down to the maximum allowed 3.( ÛÀ—úÿÿÿÿ8íÚ«Îõ+
+bsquid:S00112"FDefine and throw a dedicated exception instead of using a generic one.(şíœ*8íÚ«Îõ+
+Ysquid:UselessImportCheck"0Remove this unused import 'java.io.InputStream'.(¹»º8ÖòÑõ+
+squid:UselessImportCheck"WRemove this unused import 'org.opensaml.saml.security.impl.MetadataCredentialResolver'.(‡‰§l8ô‰ñÑõ+
+jsquid:UselessImportCheck"ARemove this unused import 'com.amazonaws.util.StringInputStream'.(†‹³³8ÖòÑõ+
+Ì%squid:RedundantThrowsDeclarationCheck"•Remove the declaration of thrown exception 'net.shibboleth.utilities.java.support.xml.XMLParserException', as it cannot be thrown from method's body.(­‚œ¹8£¤óÑõ+
+€squid:UselessImportCheck"WRemove this unused import 'net.shibboleth.utilities.java.support.resolver.CriteriaSet'.(Âïæ¾8ÖòÑõ+
+qsquid:UselessImportCheck"HRemove this unused import 'org.opensaml.core.xml.util.XMLObjectSupport'.(“¡„é8ÖòÑõ+
+ƒsquid:UselessImportCheck"ZRemove this unused import 'org.opensaml.core.xml.config.XMLObjectProviderRegistrySupport'.(›ƒ¢É8ÖòÑõ+
+xsquid:UselessImportCheck"ORemove this unused import 'org.opensaml.security.credential.CredentialSupport'.(è¦Îì8ÖòÑõ+
+csquid:UselessImportCheck":Remove this unused import 'com.nimbusds.jose.util.Base64'.(Âì’Ş8£¤óÑõ+
+à%squid:RedundantThrowsDeclarationCheck"©Remove the declaration of thrown exception 'net.shibboleth.utilities.java.support.component.ComponentInitializationException', as it cannot be thrown from method's body.(­‚œ¹8£¤óÑõ+
+Gsquid:S2325",Make "initializeOpenSAML" a "static" method.(şíœ*8íÚ«Îõ+
+vsquid:UselessImportCheck"HRemove this unused import 'org.opensaml.security.credential.Credential'.(÷Íö¶şÿÿÿÿ8ÖòÑõ+
+lsquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(Ãó‹ıÿÿÿÿ8íÚ«Îõ+
+·%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'java.security.cert.CertificateException', as it cannot be thrown from method's body.(­‚œ¹8£¤óÑõ+
+xsquid:UselessImportCheck"JRemove this unused import 'org.opensaml.core.criterion.EntityIdCriterion'.(ÛŞ¹‰øÿÿÿÿ8ÖòÑõ+
+nsquid:S1142"MReduce the number of returns of this method 4, down to the maximum allowed 3.(Öƒ”½øÿÿÿÿ8íÚ«Îõ+
+jsquid:UselessImportCheck"BRemove this unused import 'java.security.cert.CertificateFactory'.(é…ƒ#8ÖòÑõ+
+nsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.(¦åşç8íÚ«Îõ+
+Ssquid:S1135"2Complete the task associated to this TODO comment.(Ãó‹ıÿÿÿÿ8íÚ«Îõ+
+ssquid:S00117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(…Í £ÿÿÿÿÿ8íÚ«Îõ+
+¿%squid:RedundantThrowsDeclarationCheck"ˆRemove the declaration of thrown exception 'org.opensaml.core.xml.io.UnmarshallingException', as it cannot be thrown from method's body.(­‚œ¹8£¤óÑõ+
+ˆsquid:UselessImportCheck"ZRemove this unused import 'org.opensaml.saml.security.impl.SAMLSignatureProfileValidator'.(«ˆİ’ıÿÿÿÿ8ÖòÑõ+
+gsquid:UselessImportCheck"9Remove this unused import 'java.io.ByteArrayInputStream'.(Ëôæ±ûÿÿÿÿ8ÖòÑõ+
+csquid:S00112"FDefine and throw a dedicated exception instead of using a generic one.(ëÔ®„8íÚ«Îõ+
+squid:UselessImportCheck"aRemove this unused import 'org.opensaml.saml.metadata.resolver.impl.BasicRoleDescriptorResolver'.(ºê²›ûÿÿÿÿ8ô‰ñÑõ+

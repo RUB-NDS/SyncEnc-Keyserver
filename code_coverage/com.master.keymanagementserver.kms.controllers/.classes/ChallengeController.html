@@ -1,0 +1,213 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ChallengeController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">com.master.keymanagementserver.kms.controllers</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ChallengeController (com.master.keymanagementserver.kms.controllers)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ChallengeController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    89.7%
+  </span>
+  <span class="absValue">
+    (35/ 39)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package com.master.keymanagementserver.kms.controllers;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import com.master.keymanagementserver.kms.crypto.CryptoUtils;
+<i>4</i>&nbsp;import com.master.keymanagementserver.kms.crypto.Randomness;
+<i>5</i>&nbsp;import com.master.keymanagementserver.kms.helpers.ConversionHelper;
+<i>6</i>&nbsp;import com.master.keymanagementserver.kms.models.ChallengeModel;
+<i>7</i>&nbsp;import com.master.keymanagementserver.kms.models.UserModel;
+<i>8</i>&nbsp;import com.master.keymanagementserver.kms.repositories.ChallengeRepository;
+<i>9</i>&nbsp;import org.slf4j.Logger;
+<i>10</i>&nbsp;import org.slf4j.LoggerFactory;
+<i>11</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i>12</i>&nbsp;import org.springframework.dao.DataIntegrityViolationException;
+<i>13</i>&nbsp;import org.springframework.stereotype.Controller;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;import java.util.Date;
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;/**
+<i>18</i>&nbsp; * provide functions for working with the challengeModel
+<i>19</i>&nbsp; */
+<i>20</i>&nbsp;@Controller
+<i>21</i>&nbsp;public class ChallengeController {
+<b class="fc"><i>22</i>&nbsp;    private static final Logger LOGGER = LoggerFactory.getLogger(ChallengeController.class);</b>
+<b class="fc"><i>23</i>&nbsp;    private static final Integer CHALLENGE_LENGTH = 64;</b>
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;    private final ChallengeRepository challengeRepository;
+<i>26</i>&nbsp;    private final Randomness randomness;
+<i>27</i>&nbsp;    private final CryptoUtils cryptoUtils;
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    @Autowired
+<i>30</i>&nbsp;    public ChallengeController(ChallengeRepository challengeRepository,
+<b class="fc"><i>31</i>&nbsp;                               Randomness randomness, CryptoUtils cryptoUtils) {</b>
+<b class="fc"><i>32</i>&nbsp;        this.challengeRepository = challengeRepository;</b>
+<b class="fc"><i>33</i>&nbsp;        this.randomness = randomness;</b>
+<b class="fc"><i>34</i>&nbsp;        this.cryptoUtils = cryptoUtils;</b>
+<b class="fc"><i>35</i>&nbsp;    }</b>
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;    /**
+<i>38</i>&nbsp;     * create new challenge for provided userModel
+<i>39</i>&nbsp;     * the sha-512 hash will be stored
+<i>40</i>&nbsp;     *
+<i>41</i>&nbsp;     * @param userModel userModel the challenge is created for
+<i>42</i>&nbsp;     * @return the not hashed challenge, null if error occurred
+<i>43</i>&nbsp;     */
+<i>44</i>&nbsp;    String createChallengeForUser(UserModel userModel) {
+<b class="fc"><i>45</i>&nbsp;        if (userModel == null) {</b>
+<b class="fc"><i>46</i>&nbsp;            LOGGER.warn(&quot;Got null instead of a userModel.&quot;);</b>
+<b class="fc"><i>47</i>&nbsp;            return null;</b>
+<i>48</i>&nbsp;        }
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;        // generate random challenge with CHALLENGE_LENGTH bytes
+<b class="fc"><i>51</i>&nbsp;        byte[] challengeBytes = randomness.generateRandomBytes(CHALLENGE_LENGTH);</b>
+<i>52</i>&nbsp;        // base64 encode the challenge bytes and hash it
+<b class="fc"><i>53</i>&nbsp;        String challenge = ConversionHelper.base64EncodeBytes(challengeBytes).toString();</b>
+<b class="fc"><i>54</i>&nbsp;        String hashedChallenge = cryptoUtils.hashInput(challenge);</b>
+<i>55</i>&nbsp;
+<i>56</i>&nbsp;        // create the challengeModel for the provided user with the hashedChallenge, return null if failed
+<b class="fc"><i>57</i>&nbsp;        ChallengeModel createdChallengeModel = new ChallengeModel(hashedChallenge, userModel);</b>
+<i>58</i>&nbsp;        try {
+<b class="fc"><i>59</i>&nbsp;            challengeRepository.save(createdChallengeModel);</b>
+<b class="fc"><i>60</i>&nbsp;        } catch (DataIntegrityViolationException e) {</b>
+<b class="fc"><i>61</i>&nbsp;            LOGGER.error(&quot;Challenge already exists.&quot;);</b>
+<b class="fc"><i>62</i>&nbsp;            return null;</b>
+<b class="fc"><i>63</i>&nbsp;        }</b>
+<i>64</i>&nbsp;
+<b class="fc"><i>65</i>&nbsp;        return challenge;</b>
+<i>66</i>&nbsp;    }
+<i>67</i>&nbsp;
+<i>68</i>&nbsp;    /**
+<i>69</i>&nbsp;     * Search the challenge for the provided userModel
+<i>70</i>&nbsp;     *
+<i>71</i>&nbsp;     * @param userModel userModel which challenge is searched
+<i>72</i>&nbsp;     * @return challengeModel for the provided userModel, null if error occured
+<i>73</i>&nbsp;     */
+<i>74</i>&nbsp;    ChallengeModel searchChallengeForUser(UserModel userModel) {
+<i>75</i>&nbsp;        ChallengeModel challengeModel;
+<i>76</i>&nbsp;
+<i>77</i>&nbsp;        // return null if no challenge for the user found
+<i>78</i>&nbsp;        try {
+<b class="fc"><i>79</i>&nbsp;            challengeModel = challengeRepository.findChallengeByUserModel(userModel);</b>
+<b class="nc"><i>80</i>&nbsp;        } catch (NullPointerException e) {</b>
+<b class="nc"><i>81</i>&nbsp;            LOGGER.warn(&quot;No Challenge for User {} exists.&quot;, userModel.getEmail());</b>
+<b class="nc"><i>82</i>&nbsp;            LOGGER.warn(&quot;NPE: {}&quot;, e);</b>
+<i>83</i>&nbsp;
+<b class="nc"><i>84</i>&nbsp;            return null;</b>
+<b class="fc"><i>85</i>&nbsp;        }</b>
+<i>86</i>&nbsp;
+<b class="fc"><i>87</i>&nbsp;        return challengeModel;</b>
+<i>88</i>&nbsp;    }
+<i>89</i>&nbsp;
+<i>90</i>&nbsp;    /**
+<i>91</i>&nbsp;     * get challenge for the provided user
+<i>92</i>&nbsp;     * if it does not exist it will be created
+<i>93</i>&nbsp;     *
+<i>94</i>&nbsp;     * @param userModel userModel the challenge is searched or created for
+<i>95</i>&nbsp;     * @return the not hashed challenge
+<i>96</i>&nbsp;     */
+<i>97</i>&nbsp;    public String getChallengeForUser(UserModel userModel) {
+<i>98</i>&nbsp;        ChallengeModel challengeModel;
+<i>99</i>&nbsp;
+<i>100</i>&nbsp;        // if challenge for the userModel found return it, create new otherwise
+<b class="fc"><i>101</i>&nbsp;        challengeModel = searchChallengeForUser(userModel);</b>
+<b class="fc"><i>102</i>&nbsp;        if (challengeModel != null) {</b>
+<i>103</i>&nbsp;
+<b class="fc"><i>104</i>&nbsp;            return challengeModel.getChallenge();</b>
+<i>105</i>&nbsp;        }
+<i>106</i>&nbsp;
+<b class="fc"><i>107</i>&nbsp;        return createChallengeForUser(userModel);</b>
+<i>108</i>&nbsp;    }
+<i>109</i>&nbsp;
+<i>110</i>&nbsp;    /**
+<i>111</i>&nbsp;     * delete old challenges stored in the database
+<i>112</i>&nbsp;     * challenges just have limited valid range
+<i>113</i>&nbsp;     *
+<i>114</i>&nbsp;     * @param now the Date, everything with notValidAfter before this will be deleted
+<i>115</i>&nbsp;     * @return true
+<i>116</i>&nbsp;     */
+<i>117</i>&nbsp;    public boolean deleteOldChallenges(Date now) {
+<b class="fc"><i>118</i>&nbsp;        LOGGER.info(&quot;Delete all old challenges.&quot;);</b>
+<b class="fc"><i>119</i>&nbsp;        LOGGER.debug(&quot;All being before: {}&quot;, now);</b>
+<i>120</i>&nbsp;
+<b class="fc"><i>121</i>&nbsp;        Iterable&lt;ChallengeModel&gt; challengeIterable = challengeRepository.findChallengesByNotValidAfterBefore(now);</b>
+<i>122</i>&nbsp;
+<b class="fc"><i>123</i>&nbsp;        for (ChallengeModel challengeModel : challengeIterable) {</b>
+<b class="fc"><i>124</i>&nbsp;            LOGGER.info(&quot;Challenge for user ({}) was old and so deleted&quot;, challengeModel.getUserModel().getEmail());</b>
+<b class="fc"><i>125</i>&nbsp;            challengeRepository.delete(challengeModel);</b>
+<b class="fc"><i>126</i>&nbsp;        }</b>
+<i>127</i>&nbsp;
+<b class="fc"><i>128</i>&nbsp;        return true;</b>
+<i>129</i>&nbsp;    }
+<i>130</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2017-10-24 17:26</div>
+</div>
+</body>
+</html>

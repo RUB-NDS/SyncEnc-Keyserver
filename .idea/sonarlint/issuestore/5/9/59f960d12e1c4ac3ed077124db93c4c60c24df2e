@@ -1,0 +1,6 @@
+
+_squid:S1162"CRemove the usage of the checked exception 'InstantiationException'.(¨¬‡ª8¾í·Ôõ+
+Zsquid:S1162">Remove the usage of the checked exception 'ResolverException'.(×ºœ8¾í·Ôõ+
+_squid:S1162"CRemove the usage of the checked exception 'InstantiationException'.(¨¬‡ª8¾í·Ôõ+
+§squid:S1200"‘Split this class into smaller and more specialized ones to reduce its dependencies on other classes from 28 to the maximum authorized 20 or less.(ÍßÉÂ
+Zsquid:S1162">Remove the usage of the checked exception 'ResolverException'.(×ºœ8¾í·Ôõ+

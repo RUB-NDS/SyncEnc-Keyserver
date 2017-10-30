@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
+                     entityID="https://service.skidentity.de/fs/saml/metadata" validUntil="2018-02-01T09:00:00.000Z">
+    <md:IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+        <md:KeyDescriptor use="signing">
+            <ns8:KeyInfo xmlns:ns8="http://www.w3.org/2000/09/xmldsig#">
+                <ns8:X509Data>
+                    <ns8:X509Certificate>
+                        MIIFQjCCAyoCCQDfKZLPkLQ0IjANBgkqhkiG9w0BAQsFADBjMQswCQYDVQQGEwJERTEPMA0GA1UECAwGQmF5ZXJuMREwDwYDVQQHDAhNaWNoZWxhdTETMBEGA1UECgwKZWNzZWMgR21iSDEbMBkGA1UEAwwSU2tJRGVudGl0eSBTQU1MIEZTMB4XDTE2MDIyNTE4NTQ1MloXDTE4MDIyNDE4NTQ1MlowYzELMAkGA1UEBhMCREUxDzANBgNVBAgMBkJheWVybjERMA8GA1UEBwwITWljaGVsYXUxEzARBgNVBAoMCmVjc2VjIEdtYkgxGzAZBgNVBAMMElNrSURlbnRpdHkgU0FNTCBGUzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBAKBKtqrj8FpIP7y08oqx7P9SToVnZzhzFLOO9xmm1U+jsgfZx0tEqeVV9WAs+h5X4w4v++K7XLog+npoQnT2+X/tXQ/mgRn0EnjUroNWwFv+m6IU4L8xrpDncNsdtlAkl0Y+ZfVEfb3t7jbSJizX3Mftj3xf5lNU6U4jFzbr/K5tzpeIw+8bMi/kGwdjN/IsV1qlX89OPbUENSaFqz8fzfMk/UgZ26sk63z+7tPUyDaFouVT5WnXF15JpmCT6J6xHIgHdjvvizqOpq/GSK308eT5CrXrqxbY05Au1v8FH/VpUrmu+9CqtnRwueTaMIXIOG3iRns7pPkLSx5BcM4Yodpy/qd6p8u77iVY5OlmT8A2tt3x3agb3yTyVzmPZqBULs+MzSVNGgQx51N8bsniriaBIqGUv5itGEhv+dhRJJyfQSICvfZhJvlxpuhPf56KpefMCpVsf/C3BciltOSBATCWToD9OQOG/36ywO/vmTg9QpaYWNQqsL9NRCYLmTxNe87jQ1fZwY5WKZNq83V9J7U+PXK2ZBdGtt+sqI3DP4RuEAkdN2QQeHjRfCMmHaO/BJJy2+ze+lUgC1fgU+0dM6toEJnLIfRf/W+0pGu5jZXM7yQB5TZlvg1YTZJOYVJdsgb0/JyL16p213mevcZo+PiDwFptyYzB44lFbCqbwXd/AgMBAAEwDQYJKoZIhvcNAQELBQADggIBACmCTEPzrrLwDJpoeZf5dcQ2jD6MOqIL7qSph30DCiamRAKwaB43r6pzP/fvGxOjfR5S+vAggDBuKe5e1u6XYREsODdsRC1m00khHDvhX9j1+rYyT9xOg5/g0TCcObIXt3uOjNbLT60r8TwZQZfl1dhlXXcRgNfnRt6hP/2PE445AiM/MlRScS+oJotdKkGfpIAzIlHHgJo44KwxKc/B1kjjrPOL99GItdttv1zd0XxAIc0MoHnaGCGbeSB/TWuMXdfqD2+mJb1txxuQZUPJCjbA5JB2CTLrDsHJr+YTMu/9MSGC6bqlt/m6zTxhz2m0cmX1oGJEt3z5cHA9TZ8d1wAK0d528IZLNgmGqulwws3DABqWqXnS7GbSBNls0MsfmSlt5SeX4m77uCTVt/O2vtiLjvUqtMzO6bMLQEhgR42ouKq96ujmgGsEpZCH5HSqMcdFl8w0dqWIL5qxcACGVcsTYZ9hT0+faMhYkMaf/ZuUP6tiHJTVh+gsCBkZJ3t/UNNa4T/YVWGTbOuPCzaa32jQrwYo0gl0Aj3ASkyLTdhaF4Wm0IaZJDIIsPXeUmnKGyamSENR5Ri0I3Ec5sYD8kI6nxGwyMQd/HpvJ1QBk0CX36TjRTw872nW44xOWAjhCSE0YQ7CXijHf7bm+NkplwZn5gpXFUJMSh1JoiJ6CvgV
+                    </ns8:X509Certificate>
+                </ns8:X509Data>
+            </ns8:KeyInfo>
+        </md:KeyDescriptor>
+        <md:ArtifactResolutionService
+                Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP"
+                Location="https://service.skidentity.de/fs/saml/artifact"
+                index="0" isDefault="true"/>
+        <md:NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress</md:NameIDFormat>
+        <md:NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent</md:NameIDFormat>
+        <md:NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</md:NameIDFormat>
+        <md:SingleSignOnService
+                Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+                Location="https://service.skidentity.de/fs/saml/remoteauth/"/>
+        <md:SingleSignOnService
+                Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                Location="https://service.skidentity.de/fs/saml/remoteauth/"/>
+    </md:IDPSSODescriptor>
+    <md:ContactPerson contactType="technical">
+        <md:SurName>SkIDentity Service-Team</md:SurName>
+        <md:EmailAddress>mailto:service@skidentity.de</md:EmailAddress>
+    </md:ContactPerson>
+</md:EntityDescriptor>

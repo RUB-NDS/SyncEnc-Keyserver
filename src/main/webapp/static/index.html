@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>
+        Integrator - Communicator Editor
+    </title>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="icon" type="image/png" href="favicon.png"/>
+</head>
+<body>
+<iframe id="postMessageIframe" title="KMS Communicator" src="/integratedIndex.html">
+</iframe>
+<br/>
+<table id="getKeysTable">
+    <caption>Get Keys from the Key Management Server</caption>
+    <thead>
+    <tr>
+        <th>
+            Get
+        </th>
+        <th>
+            Further Input
+        </th>
+        <th>
+            Click Button To Start
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            Get own private Key
+        </td>
+        <td>
+        </td>
+        <td>
+            <button onclick="getPrivKey();" onkeypress="getPrivKey();">
+                Get Private Key - KMS
+            </button>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Get Public Key
+        </td>
+        <td>
+            <label>
+                Input the ID of the wanted public key
+            </label>
+            <input id="idPubKey" placeholder="ID of wanted public Key"/>
+        </td>
+        <td>
+            <button onclick="getPubKey();" onkeypress="getPubKey();">
+                Get public Key By KeyNameIdentifier - KMS
+            </button>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Get Public Key
+        </td>
+        <td>
+            <label>
+                Input the Email of the wanted user
+            </label>
+            <input id="email" placeholder="email of wanted user"/>
+        </td>
+        <td>
+            <button onclick="getPubKeyByUser();" onkeypress="getPubKeyByUser();">
+                Get public Key By Email- KMS
+            </button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div id="myDiv"></div>
+<script src="js/main.js" type="text/javascript" charset="utf-8"></script>
+</body>
+</html>
