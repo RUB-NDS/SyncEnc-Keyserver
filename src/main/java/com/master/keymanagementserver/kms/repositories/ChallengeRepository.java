@@ -17,5 +17,5 @@ public interface ChallengeRepository extends CrudRepository<ChallengeModel, Long
 
     ChallengeModel findChallengeByUserModel(UserModel userModel);
 
-    Iterable<ChallengeModel> findChallengesByNotValidAfterBefore(Date date);
+    Iterable<ChallengeModel> findChallengesByNotValidAfterIsBefore(Date date);
 }

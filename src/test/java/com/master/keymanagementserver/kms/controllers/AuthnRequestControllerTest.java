@@ -16,7 +16,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import java.util.Arrays;
 import java.util.Date;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 
 /**
@@ -48,7 +50,7 @@ public class AuthnRequestControllerTest {
      */
     @Test
     public void testCreateAuthnRequest() throws Exception {
-        AuthnRequestModel created = authnRequestController.createAuthnRequest("relay", "issuer");
+        AuthnRequestModel created = authnRequestController.createAuthnRequest("username", "relay", "issuer");
 
         assertEquals("", "relay", created.getRelayState());
         assertEquals("", "issuer", created.getIssuer());
@@ -60,7 +62,7 @@ public class AuthnRequestControllerTest {
     @Test
     public void testCreateAuthnRequestExistingRequest() throws Exception {
         Mockito.when(authnRequestRepository.save(any(AuthnRequestModel.class))).thenThrow(new DataIntegrityViolationException("AuthnRequest already exists."));
-        AuthnRequestModel created = authnRequestController.createAuthnRequest("relay", "issuer");
+        AuthnRequestModel created = authnRequestController.createAuthnRequest("username", "relay", "issuer");
 
         assertNull("", created);
     }
@@ -70,11 +72,11 @@ public class AuthnRequestControllerTest {
      */
     @Test
     public void testDeleteAllOldAuthnRequest() throws Exception {
-        AuthnRequestModel fastInvalid = new AuthnRequestModel("relay", "issuer", 5);
+        AuthnRequestModel fastInvalid = new AuthnRequestModel("username", "relay", "issuer", 5);
         AuthnRequestModel[] array = {fastInvalid};
         Iterable<AuthnRequestModel> iterable = Arrays.asList(array);
         Date input = DateTime.now().minusSeconds(5).toDate();
-        Mockito.when(authnRequestRepository.findAuthnRequestsByNotValidAfterBefore(input)).thenReturn(iterable);
+        Mockito.when(authnRequestRepository.findAuthnRequestsByNotValidAfterIsBefore(input)).thenReturn(iterable);
 
         assertTrue("", authnRequestController.deleteAllOldAuthnRequest(input));
     }

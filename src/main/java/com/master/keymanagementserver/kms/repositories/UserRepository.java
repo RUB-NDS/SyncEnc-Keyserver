@@ -11,9 +11,11 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends CrudRepository<UserModel, Long> {
     UserModel findUserById(Long id);
 
-    UserModel findUserByEmail(String email);
+    UserModel findUserByUsername(String username);
 
     UserModel findUserByKeyNameIdentifier(String keyNameIdentifier);
+
+    UserModel findUserByStringIdIdP(String stringIdIdP);
 
     @Override
     Iterable<UserModel> findAll();

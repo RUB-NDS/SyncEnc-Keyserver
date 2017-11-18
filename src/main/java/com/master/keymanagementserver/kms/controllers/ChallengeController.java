@@ -43,14 +43,14 @@ public class ChallengeController {
      * @return the not hashed challenge, null if error occurred
      */
     String createChallengeForUser(UserModel userModel) {
-        if(LOGGER.isDebugEnabled()){
-            LOGGER.debug("create challenge for user {}"
-                    , LogEncoderHelper.encodeLogEntry(userModel.getEmail()));
-        }
         if (userModel == null) {
             LOGGER.error("Got null instead of a userModel.");
 
             return null;
+        }
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("create challenge for user {}"
+                    , LogEncoderHelper.encodeLogEntry(userModel.getUsername()));
         }
 
         // generate random challenge with CHALLENGE_LENGTH bytes
@@ -78,9 +78,9 @@ public class ChallengeController {
      * @return challengeModel for the provided userModel, null if error occured
      */
     ChallengeModel searchChallengeForUser(UserModel userModel) {
-        if(LOGGER.isDebugEnabled()){
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("search challenge for user {}"
-                    , LogEncoderHelper.encodeLogEntry(userModel.getEmail()));
+                    , LogEncoderHelper.encodeLogEntry(userModel.getUsername()));
         }
         ChallengeModel challengeModel;
 
@@ -88,7 +88,7 @@ public class ChallengeController {
         try {
             challengeModel = challengeRepository.findChallengeByUserModel(userModel);
         } catch (NullPointerException e) {
-            LOGGER.warn("No Challenge for User {} exists.", userModel.getEmail());
+            LOGGER.warn("No Challenge for User {} exists.", userModel.getUsername());
             LOGGER.warn("NPE: {}", e);
 
             return null;
@@ -105,19 +105,19 @@ public class ChallengeController {
      * @return the not hashed challenge
      */
     public String getChallengeForUser(UserModel userModel) {
-        if(LOGGER.isDebugEnabled()){
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("get challenge for user {}"
-                    , LogEncoderHelper.encodeLogEntry(userModel.getEmail()));
+                    , LogEncoderHelper.encodeLogEntry(userModel.getUsername()));
         }
         ChallengeModel challengeModel;
 
-        if(LOGGER.isDebugEnabled()){
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("first search it");
         }
         // if challenge for the userModel found return it, create new otherwise
         challengeModel = searchChallengeForUser(userModel);
         if (challengeModel != null) {
-            if(LOGGER.isDebugEnabled()){
+            if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("does not exists so create it");
             }
 
@@ -136,15 +136,15 @@ public class ChallengeController {
      */
     public boolean deleteOldChallenges(Date now) {
         LOGGER.info("Delete all old challenges.");
-        if(LOGGER.isDebugEnabled()){
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("All being before: {}"
                     , LogEncoderHelper.encodeLogEntry(now.toString()));
         }
 
-        Iterable<ChallengeModel> challengeIterable = challengeRepository.findChallengesByNotValidAfterBefore(now);
+        Iterable<ChallengeModel> challengeIterable = challengeRepository.findChallengesByNotValidAfterIsBefore(now);
 
         for (ChallengeModel challengeModel : challengeIterable) {
-            LOGGER.info("Challenge for user ({}) was old and so deleted", challengeModel.getUserModel().getEmail());
+            LOGGER.info("Challenge for user ({}) was old and so deleted", challengeModel.getUserModel().getUsername());
             challengeRepository.delete(challengeModel);
         }
 

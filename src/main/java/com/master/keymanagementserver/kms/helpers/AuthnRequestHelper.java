@@ -348,7 +348,7 @@ public class AuthnRequestHelper {
      *
      * @return the AuthnRequest
      */
-    private AuthnRequest buildAuthnRequestObject() {
+    private AuthnRequest buildAuthnRequestObject(String username) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("build authnRequestObject");
         }
@@ -367,7 +367,7 @@ public class AuthnRequestHelper {
         requestedAuthnContext = getAuthnContext(authnContextClassRef);
 
         // pass the individual parts and return the AuthnRequest
-        return getAuthnRequest(issuer, nameIDPolicy, requestedAuthnContext);
+        return getAuthnRequest(issuer, nameIDPolicy, requestedAuthnContext, username);
     }
 
     /**
@@ -379,7 +379,7 @@ public class AuthnRequestHelper {
      * @return the AuthnRequest with the provided individual parts
      */
     private AuthnRequest getAuthnRequest(Issuer issuer, NameIDPolicy nameIDPolicy
-            , RequestedAuthnContext requestedAuthnContext) {
+            , RequestedAuthnContext requestedAuthnContext, String username) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("create the authnRequest");
         }
@@ -391,7 +391,8 @@ public class AuthnRequestHelper {
             LOGGER.debug("create the authnRequest in db");
         }
         // create the AuthnRequest in the DB, provides valid range and the ID
-        AuthnRequestModel authnRequestModel = authnRequestController.createAuthnRequest(consumerUrl, issuer.getValue());
+        AuthnRequestModel authnRequestModel = authnRequestController
+                .createAuthnRequest(username, consumerUrl, issuer.getValue());
 
         // create the AuthnRequest that is send to the IdP
         authnRequestBuilder = new AuthnRequestBuilder();
@@ -428,7 +429,7 @@ public class AuthnRequestHelper {
      *
      * @return the url to which should be redirected
      */
-    public String getRedirectURL() {
+    public String getRedirectURL(String username) {
         AuthnRequest authnRequest;
         String encodedAuthnRequest;
 
@@ -440,7 +441,7 @@ public class AuthnRequestHelper {
                 LOGGER.error("Error while generating RedirectURL. Unable to get the IDP-URL.");
                 return "";
             }
-            authnRequest = buildAuthnRequestObject();
+            authnRequest = buildAuthnRequestObject(username);
             encodedAuthnRequest = encodeAuthnRequest(authnRequest);
 
             return idpURL + "?SAMLRequest=" + encodedAuthnRequest + "&RelayState="

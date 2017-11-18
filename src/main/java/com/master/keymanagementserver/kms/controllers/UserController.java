@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
-import sun.rmi.runtime.Log;
 
 /**
  * provide functions for working with the userModel
@@ -38,20 +37,35 @@ public class UserController {
         this.cryptoUtils = cryptoUtils;
     }
 
+    public UserModel searchUserWithStringIdentifier(String identifier) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("search user with identifier: {}", LogEncoderHelper.encodeLogEntry(identifier));
+        }
+        UserModel userModel = userRepository.findUserByStringIdIdP(identifier);
+
+        if (userModel == null) {
+            LOGGER.info("No User Model found for the identifier ({})", identifier);
+
+            return null;
+        }
+
+        return userModel;
+    }
+
     /**
      * search the belonging userModel
      *
-     * @param email email from the searched userModel
+     * @param username username from the searched userModel
      * @return the requested user model or null if not found
      */
-    public UserModel searchUser(String email) {
+    public UserModel searchUser(String username) {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("search user with mail: {}", LogEncoderHelper.encodeLogEntry(email));
+            LOGGER.debug("search user with username: {}", LogEncoderHelper.encodeLogEntry(username));
         }
-        UserModel userModel = userRepository.findUserByEmail(email);
+        UserModel userModel = userRepository.findUserByUsername(username);
 
         if (userModel == null) {
-            LOGGER.info("No User Model found for the email ({})", email);
+            LOGGER.info("No User Model found for the username ({})", username);
 
             return null;
         }
@@ -65,12 +79,12 @@ public class UserController {
      * @param email email of the userModel that needs to be created
      * @return the createdUserModel or null if exception was thrown
      */
-    UserModel createUser(String email) {
+    UserModel createUser(String email, String stringIdIdp) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("create user with mail: {}", LogEncoderHelper.encodeLogEntry(email));
         }
 
-        UserModel newUserModel = new UserModel(email);
+        UserModel newUserModel = new UserModel(email, stringIdIdp);
         try {
             userRepository.save(newUserModel);
         } catch (DataIntegrityViolationException e) {
@@ -85,18 +99,18 @@ public class UserController {
     /**
      * add publicKey to the userModel with the given email
      *
-     * @param email  email of the userModel which publicKey should be set
-     * @param pubKey publicKey that should be set
+     * @param username username of the userModel which publicKey should be set
+     * @param pubKey   publicKey that should be set
      * @return the userModel where the publicKey was set or null if an error occured
      */
-    public UserModel addPublicKey(String email, String pubKey) {
+    public UserModel addPublicKey(String username, String pubKey) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("the user with the mail '{}' got this pubKey '{}'"
-                    , LogEncoderHelper.encodeLogEntry(email)
+                    , LogEncoderHelper.encodeLogEntry(username)
                     , LogEncoderHelper.encodeLogEntry(pubKey));
         }
         // search the user and return null if no userModel was found
-        UserModel userModel = searchUser(email);
+        UserModel userModel = searchUser(username);
         if (userModel == null) {
             return null;
         }
@@ -156,7 +170,7 @@ public class UserController {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("check the challenge {} for the user {}"
                     , LogEncoderHelper.encodeLogEntry(solvedChallenge)
-                    , LogEncoderHelper.encodeLogEntry(userModel.getEmail()));
+                    , LogEncoderHelper.encodeLogEntry(userModel.getUsername()));
         }
         // get the sha-512 hashed challenge from database
         ChallengeModel challengeModel = challengeController.searchChallengeForUser(userModel);
@@ -167,7 +181,7 @@ public class UserController {
             return false;
         }
 
-        if(LOGGER.isDebugEnabled()){
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("expected challenge {}", LogEncoderHelper.encodeLogEntry(challengeModel.getChallenge()));
         }
         // check if the hashed provided challenge is equal to the saved on in the database
@@ -182,7 +196,7 @@ public class UserController {
      * @return the userModel which email-address was changed, null if an error occured
      */
     UserModel changeEmailAddress(String emailOld, String emailNew) {
-        if(LOGGER.isDebugEnabled()){
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("change this mail {} to this {}"
                     , LogEncoderHelper.encodeLogEntry(emailOld)
                     , LogEncoderHelper.encodeLogEntry(emailNew));
@@ -197,7 +211,7 @@ public class UserController {
 
         // Try to change the email, in case of error return null
         try {
-            userModel.setEmail(emailNew);
+            userModel.setUsername(emailNew);
             userRepository.save(userModel);
         } catch (DataIntegrityViolationException e) {
             LOGGER.error("Could not change email because address already exists.");
@@ -215,7 +229,7 @@ public class UserController {
      * @return publicKey string that was requested, null if none found
      */
     public String getPublicKeyByIdentifier(String identifier) {
-        if(LOGGER.isDebugEnabled()){
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Looking for pubKey with identifier ({})", LogEncoderHelper.encodeLogEntry(identifier));
         }
         try {
@@ -241,10 +255,10 @@ public class UserController {
 
             return null;
         }
-        if(LOGGER.isDebugEnabled()){
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("add wrappedKey {} to user {}"
                     , LogEncoderHelper.encodeLogEntry(wrappedKey)
-                    , LogEncoderHelper.encodeLogEntry(userModel.getEmail()));
+                    , LogEncoderHelper.encodeLogEntry(userModel.getUsername()));
         }
 
         userModel.setWrappedKey(wrappedKey);
@@ -257,27 +271,44 @@ public class UserController {
      * get user
      * if the user is not in the database create it
      *
-     * @param email the email of the userModel that should searched or created
+     * @param username    the username of the userModel that should searched or created
+     * @param stringIdIdp the stringIdIdp of the userModel that should searched or created
      * @return userModel that was found or created
      */
-    public UserModel getUser(String email) {
-        if(LOGGER.isDebugEnabled()){
-            LOGGER.debug("get user with email: {}", LogEncoderHelper.encodeLogEntry(email));
+    public UserModel getUser(String username, String stringIdIdp) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("get user with email: {}", LogEncoderHelper.encodeLogEntry(username));
+            LOGGER.debug("get user with stringIdIdP: {}", LogEncoderHelper.encodeLogEntry(stringIdIdp));
             LOGGER.debug("first search it");
         }
-        UserModel userModel = searchUser(email);
+        UserModel userModelWithIdentifier = searchUserWithStringIdentifier(stringIdIdp);
+        UserModel userModel = searchUser(username);
 
-        // if userModel found return it
-        if (userModel != null) {
+        if (userModelWithIdentifier != null && userModel != null) {
+            if (userModelWithIdentifier.getUsername().equals(userModel.getUsername())) {
+
+                return userModelWithIdentifier;
+            }
+            LOGGER.error("identifer exists but with different username");
+
+            return null;
+        } else if (userModelWithIdentifier != null) {
+            LOGGER.error("identifer exists but with different username");
+
+            return null;
+        } else if (userModel != null) {
+            LOGGER.error("username exists but with different identifier");
+
+            return null;
+        } else {
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("does not exist so create it");
+            }
+            // otherwise create a new userModel
+            userModel = createUser(username, stringIdIdp);
+
             return userModel;
         }
-        if(LOGGER.isDebugEnabled()){
-            LOGGER.debug("does not exist so create it");
-        }
-        // otherwise create a new userModel
-        userModel = createUser(email);
-
-        return userModel;
     }
 
     /**
@@ -298,9 +329,9 @@ public class UserController {
      * @return true, for checking in if
      */
     public boolean changeOAuthStateSendPubKey(UserModel userModel) {
-        if(LOGGER.isDebugEnabled()){
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("change state to SENDPUBKEY of {}"
-                    , LogEncoderHelper.encodeLogEntry(userModel.getEmail()));
+                    , LogEncoderHelper.encodeLogEntry(userModel.getUsername()));
         }
         changeOAuthState(userModel, UserStates.SENDPUBKEY);
 
@@ -314,9 +345,9 @@ public class UserController {
      * @return true, for checking in if
      */
     public boolean changeOAuthStateAccessWrappedKey(UserModel userModel) {
-        if(LOGGER.isDebugEnabled()){
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("change state to ACCESSWRAPPEDKEY of {}"
-                    , LogEncoderHelper.encodeLogEntry(userModel.getEmail()));
+                    , LogEncoderHelper.encodeLogEntry(userModel.getUsername()));
         }
         changeOAuthState(userModel, UserStates.ACCESSWRAPPEDKEY);
 
@@ -330,9 +361,9 @@ public class UserController {
      * @return true, for checking in if
      */
     public boolean changeOAuthStateSendWrappedKey(UserModel userModel) {
-        if(LOGGER.isDebugEnabled()){
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("change state to SENDWRAPPEDKEY of {}"
-                    , LogEncoderHelper.encodeLogEntry(userModel.getEmail()));
+                    , LogEncoderHelper.encodeLogEntry(userModel.getUsername()));
         }
         changeOAuthState(userModel, UserStates.SENDWRAPPEDKEY);
 
@@ -346,9 +377,9 @@ public class UserController {
      * @return true, for checking in if
      */
     public boolean changeOAuthStateSolveChall(UserModel userModel) {
-        if(LOGGER.isDebugEnabled()){
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("change state to SOLVECHALL of {}"
-                    , LogEncoderHelper.encodeLogEntry(userModel.getEmail()));
+                    , LogEncoderHelper.encodeLogEntry(userModel.getUsername()));
         }
         changeOAuthState(userModel, UserStates.SOLVECHALL);
 

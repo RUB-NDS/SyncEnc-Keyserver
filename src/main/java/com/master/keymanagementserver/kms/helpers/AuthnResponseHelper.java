@@ -16,7 +16,6 @@ import org.opensaml.core.xml.util.XMLObjectSupport;
 import org.opensaml.saml.saml2.core.Assertion;
 import org.opensaml.saml.saml2.core.Attribute;
 import org.opensaml.saml.saml2.core.AttributeStatement;
-import org.opensaml.saml.saml2.core.Issuer;
 import org.opensaml.saml.saml2.core.Response;
 import org.opensaml.saml.security.impl.SAMLSignatureProfileValidator;
 import org.opensaml.security.credential.Credential;
@@ -34,7 +33,6 @@ import java.io.InputStream;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * provides functions to parse the SAMLResponse provided by the IdP
@@ -55,19 +53,21 @@ public class AuthnResponseHelper {
     /**
      * parses the SAMLResponse provided by the IdP
      *
-     * @param httpServletRequest the request that provides the SAMLResponse
+     * @param samlResponse the SAMLResponse provided in the request
+     * @param relayState   the relayState provided by the request
      * @return the email provided in the Response, empty String in case of an error
      */
-    public String parseAuthnResponse(HttpServletRequest httpServletRequest) {
+    public String[] parseAuthnResponse(String samlResponse, String relayState) {
         try {
             // Get the SAMLResponse which is provided by the IdP
-            String samlResponse = httpServletRequest.getParameter("SAMLResponse");
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("respMessage: {}"
                         , LogEncoderHelper.encodeLogEntry(samlResponse));
             }
 
             if (samlResponse == null || "".equals(samlResponse)) {
+                LOGGER.error("No samlResponse provided");
+
                 return null;
             }
 
@@ -94,18 +94,17 @@ public class AuthnResponseHelper {
             DateTime issueInstant = response.getIssueInstant();
             if (authnRequestModel == null
                     || !timeHelper.checkTimeValidity(issueInstant, authnRequestModel)
-                    || !httpServletRequest.getParameter("RelayState").equals(authnRequestModel.getRelayState())) {
+                    || !relayState.equals(authnRequestModel.getRelayState())) {
                 // return an empty string if on of the conditions does not fulfill
                 if (LOGGER.isDebugEnabled()) {
                     LOGGER.debug("is Null: {}"
                             , authnRequestModel == null);
                     LOGGER.debug("equals: {}"
-                            , httpServletRequest.getParameter("RelayState")
-                                    .equals(authnRequestModel.getRelayState()));
+                            , relayState.equals(authnRequestModel.getRelayState()));
                     LOGGER.debug("stored RelayState: {}"
                             , LogEncoderHelper.encodeLogEntry(authnRequestModel.getRelayState()));
                     LOGGER.debug("gotten RelayState: {}"
-                            , LogEncoderHelper.encodeLogEntry(httpServletRequest.getParameter("RelayState")));
+                            , LogEncoderHelper.encodeLogEntry(relayState));
                 }
                 LOGGER.error("Assertion does not belong to an active/valid AuthnRequest.");
 
@@ -119,7 +118,10 @@ public class AuthnResponseHelper {
             }
             // get the Assertion out of the SAMLResponse and check if the issuer is correct
             Assertion assertion = response.getAssertions().get(0);
-            if (!checkIssuerOfAuthnResponse(assertion.getIssuer(), authnRequestModel)) {
+            if (!checkIssuerOfAuthnResponse(assertion.getConditions()
+                    .getAudienceRestrictions().get(0)
+                    .getAudiences().get(0).getAudienceURI()
+                    , authnRequestModel)) {
                 LOGGER.error("Issuer from Assertion not match the stored Issuer!");
 
                 return null;
@@ -140,13 +142,20 @@ public class AuthnResponseHelper {
             // search for the attributeStatement mail in the assertion
             for (AttributeStatement attributeStatement : assertion.getAttributeStatements()) {
                 for (Attribute attribute : attributeStatement.getAttributes()) {
-                    if ("mail".equals(attribute.getName().trim())) {
-                        return attribute.getAttributeValues().get(0).getDOM().getFirstChild().getNodeValue();
+                    if ("eIdentifier".equals(attribute.getFriendlyName().trim())) {
+                        LOGGER.info("StringIdentifier extracted from the assertion.");
+
+                        String[] stringArray = new String[2];
+                        stringArray[0] = attribute.getAttributeValues().get(0).getDOM().getFirstChild().getNodeValue();
+                        stringArray[1] = authnRequestModel.getUsername();
+
+                        return stringArray;
                     }
                 }
             }
 
-            return "babo@mail.com";
+            LOGGER.info("No Mail was found in the assertion.");
+            return null;
         } catch (IOException | UnmarshallingException | XMLParserException e) {
             LOGGER.error("Error occured while parsing the SAMLResponse", e);
 
@@ -202,20 +211,20 @@ public class AuthnResponseHelper {
     /**
      * check if the issuer stored in the db and the issuer provided in the Assertion are equal
      *
-     * @param issuerAuthnResponse the issuer provided by the Asssertion
-     * @param authnRequestModel   AuthnRequest stored in the database
+     * @param audience          the authnreq issuer provided by the Asssertion
+     * @param authnRequestModel AuthnRequest stored in the database
      * @return true if both are equal, false otherwise
      */
 
-    boolean checkIssuerOfAuthnResponse(Issuer issuerAuthnResponse, AuthnRequestModel authnRequestModel) {
+    boolean checkIssuerOfAuthnResponse(String audience, AuthnRequestModel authnRequestModel) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("check the issuer of response {} and stored one {}"
-                    , LogEncoderHelper.encodeLogEntry(issuerAuthnResponse.getValue())
+                    , LogEncoderHelper.encodeLogEntry(audience)
                     , LogEncoderHelper.encodeLogEntry(authnRequestModel.getIssuer()));
         }
         String issuerAuthnRequest = authnRequestModel.getIssuer();
 
-        return issuerAuthnRequest.equals(issuerAuthnResponse.getValue());
+        return issuerAuthnRequest.equals(audience);
     }
 
     /**

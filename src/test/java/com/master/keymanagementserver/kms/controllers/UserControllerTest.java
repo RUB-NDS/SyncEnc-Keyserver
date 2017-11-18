@@ -18,7 +18,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import java.lang.reflect.Method;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 
 /**
@@ -51,8 +54,8 @@ public class UserControllerTest {
     @Before
     public void before() throws Exception {
         MockitoAnnotations.initMocks(this);
-        userModel = new UserModel(emailPG);
-        userModel2 = new UserModel(emailPGE);
+        userModel = new UserModel(emailPG, "identifier");
+        userModel2 = new UserModel(emailPGE, "identifier2");
         userController = new UserController(userRepository, challengeController, randomness, cryptoUtils);
     }
 
@@ -128,10 +131,10 @@ public class UserControllerTest {
      */
     @Test
     public void testChangeEmailAddress() throws Exception {
-        Mockito.when(userRepository.findUserByEmail(emailPG)).thenReturn(userModel);
+        Mockito.when(userRepository.findUserByUsername(emailPG)).thenReturn(userModel);
         UserModel changed = userController.changeEmailAddress(emailPG, emailPG1);
 
-        assertEquals("", emailPG1, changed.getEmail());
+        assertEquals("", emailPG1, changed.getUsername());
     }
 
     /**
@@ -139,7 +142,7 @@ public class UserControllerTest {
      */
     @Test
     public void testChangeEmailAddressDuplicateMail() throws Exception {
-        Mockito.when(userRepository.findUserByEmail(emailPGE)).thenReturn(userModel2);
+        Mockito.when(userRepository.findUserByUsername(emailPGE)).thenReturn(userModel2);
         Mockito.when(userRepository.save(any(UserModel.class))).thenThrow(new DataIntegrityViolationException("Duplicate mail entry"));
 
         assertNull("", userController.changeEmailAddress(emailPGE, emailPG));
@@ -150,7 +153,7 @@ public class UserControllerTest {
      */
     @Test
     public void testChangeEmailAddressNonExistingMail() throws Exception {
-        Mockito.when(userRepository.findUserByEmail(emailPG)).thenReturn(null);
+        Mockito.when(userRepository.findUserByUsername(emailPG)).thenReturn(null);
 
         assertNull("", userController.changeEmailAddress(emailPG, emailPG1));
     }
@@ -160,7 +163,7 @@ public class UserControllerTest {
      */
     @Test
     public void testChangeEmailAddressNonExisitingUser() throws Exception {
-        Mockito.when(userRepository.findUserByEmail(emailPG)).thenReturn(null);
+        Mockito.when(userRepository.findUserByUsername(emailPG)).thenReturn(null);
 
         assertNull("", userController.changeEmailAddress(emailPG, emailPG1));
     }
@@ -206,8 +209,9 @@ public class UserControllerTest {
     @Test
     public void testGetUserExistingUser() throws Exception {
         Mockito.when(userController.searchUser(emailPG)).thenReturn(userModel);
+        Mockito.when(userController.searchUserWithStringIdentifier("identifier")).thenReturn(userModel);
 
-        assertEquals("", userModel.getEmail(), userController.getUser(emailPG).getEmail());
+        assertEquals("", userModel.getUsername(), userController.getUser(emailPG, "identifier").getUsername());
     }
 
     /**
@@ -216,9 +220,9 @@ public class UserControllerTest {
     @Test
     public void testGetUserNonExistingUser() throws Exception {
         Mockito.when(userController.searchUser(emailPG)).thenReturn(null);
-        Mockito.when(userController.createUser(emailPG)).thenReturn(userModel);
+        Mockito.when(userController.createUser(emailPG, "identifier")).thenReturn(userModel);
 
-        assertEquals("", userModel.getEmail(), userController.getUser(emailPG).getEmail());
+        assertEquals("", userModel.getUsername(), userController.getUser(emailPG, "identifier").getUsername());
     }
 
     /**
@@ -226,9 +230,9 @@ public class UserControllerTest {
      */
     @Test
     public void testGetUserNotExistingUser() throws Exception {
-        Mockito.when(userController.getUser(emailPG1)).thenReturn(new UserModel(emailPG1));
+        Mockito.when(userController.getUser(emailPG1, "identifier")).thenReturn(new UserModel(emailPG1, "identifier1"));
 
-        assertEquals("", emailPG1, userController.getUser(emailPG1).getEmail());
+        assertEquals("", emailPG1, userController.getUser(emailPG1, "identifier").getUsername());
     }
 
     /**
@@ -236,7 +240,7 @@ public class UserControllerTest {
      */
     @Test
     public void testSearchUser() throws Exception {
-        Mockito.when(userRepository.findUserByEmail(emailPG)).thenReturn(userModel);
+        Mockito.when(userRepository.findUserByUsername(emailPG)).thenReturn(userModel);
 
         assertEquals("", userModel, userController.searchUser(emailPG));
     }
@@ -255,10 +259,10 @@ public class UserControllerTest {
     @Test
     public void testCreateUser() throws Exception {
         Mockito.when(userRepository.save(any(UserModel.class))).thenReturn(userModel);
-        Method method = userController.getClass().getDeclaredMethod("createUser", String.class);
+        Method method = userController.getClass().getDeclaredMethod("createUser", String.class, String.class);
         method.setAccessible(true);
 
-        assertEquals("", userModel.getEmail(), ((UserModel) method.invoke(userController, emailPG)).getEmail());
+        assertEquals("", userModel.getUsername(), ((UserModel) method.invoke(userController, emailPG, "identifier")).getUsername());
     }
 
     /**
@@ -267,10 +271,10 @@ public class UserControllerTest {
     @Test
     public void testCreateUserExistingUser() throws Exception {
         Mockito.when(userRepository.save(any(UserModel.class))).thenThrow(new DataIntegrityViolationException("User already exists."));
-        Method method = userController.getClass().getDeclaredMethod("createUser", String.class);
+        Method method = userController.getClass().getDeclaredMethod("createUser", String.class, String.class);
         method.setAccessible(true);
 
-        assertNull("UserModel already exists, so it should be null.", method.invoke(userController, emailPG));
+        assertNull("UserModel already exists, so it should be null.", method.invoke(userController, emailPG, "identifier"));
     }
 
     /**

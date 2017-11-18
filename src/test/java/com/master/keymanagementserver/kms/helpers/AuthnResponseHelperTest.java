@@ -31,11 +31,13 @@ public class AuthnResponseHelperTest {
     TimeHelper timeHelper;
 
     AuthnResponseHelper authnResponseHelper;
+    AuthnRequestModel authnRequestModel;
 
     @Before
     public void before() throws Exception {
         MockitoAnnotations.initMocks(this);
         authnResponseHelper = new AuthnResponseHelper(authnRequestRepository, timeHelper);
+        authnRequestModel = new AuthnRequestModel("username", "relaysState", "issuer");
     }
 
     @After
@@ -47,19 +49,17 @@ public class AuthnResponseHelperTest {
      */
     @Test
     public void testCheckIssuerOfAuthnResponse() throws Exception {
-        AuthnRequestModel authnRequestModel = new AuthnRequestModel("relaysState", "issuer");
-
         IssuerBuilder issuerBuilder = new IssuerBuilder();
         Issuer issuer = issuerBuilder.buildObject(SAMLConstants.SAML20_NS, "Issuer", "samlp");
         issuer.setValue("issuer");
 
-        assertTrue("", authnResponseHelper.checkIssuerOfAuthnResponse(issuer, authnRequestModel));
+        assertTrue("", authnResponseHelper.checkIssuerOfAuthnResponse(issuer.getValue(), authnRequestModel));
 
         issuerBuilder = new IssuerBuilder();
         issuer = issuerBuilder.buildObject(SAMLConstants.SAML20_NS, "Issuer", "samlp");
         issuer.setValue("issuerFalse");
 
-        assertFalse("", authnResponseHelper.checkIssuerOfAuthnResponse(issuer, authnRequestModel));
+        assertFalse("", authnResponseHelper.checkIssuerOfAuthnResponse(issuer.getValue(), authnRequestModel));
     }
 
     /**
@@ -67,12 +67,18 @@ public class AuthnResponseHelperTest {
      */
     @Test
     public void testGetRelatedAuthnRequest() throws Exception {
-        AuthnRequestModel authnRequestModel = new AuthnRequestModel("relay", "issuer");
         Mockito.when(authnRequestRepository.findAuthnRequestById(authnRequestModel.getId())).thenReturn(authnRequestModel);
 
         AuthnRequestModel found = authnResponseHelper.getRelatedAuthnRequest(authnRequestModel.getId());
 
         assertEquals("", authnRequestModel, found);
+    }
+
+    @Test
+    public void testParseAuthnResponse() throws Exception {
+        String samlResponse = "";
+        String relayState = "relayState";
+        assertEquals("", "patrick.geisler-a85@rub.de", authnResponseHelper.parseAuthnResponse(samlResponse, relayState));
     }
 
 } 

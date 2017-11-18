@@ -26,7 +26,7 @@ public class UserModelTest {
 
     @Before
     public void before() throws Exception {
-        userModel = new UserModel("pg@rub.de");
+        userModel = new UserModel("pg@rub.de", "identifier");
     }
 
     @After
@@ -46,18 +46,18 @@ public class UserModelTest {
      * Method: getEmail()
      */
     @Test
-    public void testGetEmail() throws Exception {
-        assertEquals("", "pg@rub.de", userModel.getEmail());
+    public void testGetUsername() throws Exception {
+        assertEquals("", "pg@rub.de", userModel.getUsername());
     }
 
     /**
      * Method: setEmail(String email) & getEmail
      */
     @Test
-    public void testSetEmail() throws Exception {
-        userModel.setEmail("test@rub.de");
+    public void testSetUsername() throws Exception {
+        userModel.setUsername("test@rub.de");
 
-        assertEquals("", "test@rub.de", userModel.getEmail());
+        assertEquals("", "test@rub.de", userModel.getUsername());
     }
 
     /**

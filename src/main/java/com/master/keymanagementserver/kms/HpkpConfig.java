@@ -23,7 +23,10 @@ public class HpkpConfig extends WebSecurityConfigurerAdapter {
                         // https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem
                         , "YLh1dUR9y6Kja30RrAn7JKnbQG/uEtLMkBgFF2Fuihg="
                         // https://letsencrypt.org/certs/isrgrootx1.pem
-                        , "C5+lpZ7tcVwmwQIMcRtPbsQtWLABXhQzejna0wHFr8M=")
+                        , "C5+lpZ7tcVwmwQIMcRtPbsQtWLABXhQzejna0wHFr8M="
+                        // Backup-Cert
+                        , "juVMdTCelRykDfSbZ1C9KWJhJOMKYDHiI447o2MhWSM="
+                )
                 .reportOnly(false)
                 // .reportUri("http://example.net/hpkp-report")
                 .includeSubDomains(true);

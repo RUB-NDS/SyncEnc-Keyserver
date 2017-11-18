@@ -1,4 +1,0 @@
-
-gsquid:S1142"MReduce the number of returns of this method 6, down to the maximum allowed 3.(Ò°Ÿõşÿÿÿÿ
- squid:MethodCyclomaticComplexity"gThe Cyclomatic Complexity of this method "checkTimeValidity" is 11 which is greater than 10 authorized.(Ò°Ÿõşÿÿÿÿ8ñØÓõ+
-•squid:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ªÇ¨

@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.util.HtmlUtils;
 
 public class LogEncoderHelper {
-    private static final Logger LOGGER = LoggerFactory.getLogger(OAuthHelper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LogEncoderHelper.class);
 
     private LogEncoderHelper() {
     }

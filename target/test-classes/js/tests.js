@@ -1,7 +1,7 @@
 QUnit.test('testing helpfunctions: stringToArrayBuffer', function (assert) {
     const inputEmpty = '';
     const expectedOutputEmpty = new Int8Array();
-    
+
     assert.deepEqual(stringToArrayBuffer(inputEmpty), expectedOutputEmpty, '');
 
     const inputShort = 'myShortInput';
@@ -154,7 +154,8 @@ QUnit.test('testing webCrypto: deriveSymmKey', function (assert) {
             'unwrapKey',
         ],
     };
-    deriveSymmKey('password').then(function () {
+    password = 'password';
+    deriveSymmKey().then(function () {
         assert.equal(derivedKey.algorithm.length, expectedKey.algorithm.length, '');
         assert.equal(derivedKey.algorithm.name, expectedKey.algorithm.name, '');
         assert.equal(derivedKey.extractable, expectedKey.extractable, '');

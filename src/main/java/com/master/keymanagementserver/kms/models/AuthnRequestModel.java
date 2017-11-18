@@ -42,6 +42,10 @@ public class AuthnRequestModel {
     @Basic(optional = false)
     private String issuer;
 
+    @NotNull
+    @Basic(optional = false)
+    private String username;
+
     protected AuthnRequestModel() {
     }
 
@@ -51,11 +55,11 @@ public class AuthnRequestModel {
      * @param relayState the relayState string which will be stored in the database
      * @param issuer     the issuer string which will be stored in the database
      */
-    public AuthnRequestModel(String relayState, String issuer) {
-        this(relayState, issuer, 300);
+    public AuthnRequestModel(String username, String relayState, String issuer) {
+        this(username, relayState, issuer, 300);
     }
 
-    public AuthnRequestModel(String relayState, String issuer, Integer validTimeInSeconds) {
+    public AuthnRequestModel(String username, String relayState, String issuer, Integer validTimeInSeconds) {
         DateTime dateTime = new DateTime();
         this.notValidBefore = dateTime.toDate();
         // makes the request valid for the provided time in seconds
@@ -63,6 +67,7 @@ public class AuthnRequestModel {
 
         this.relayState = relayState;
         this.issuer = issuer;
+        this.username = username;
     }
 
     public String getId() {
@@ -83,6 +88,10 @@ public class AuthnRequestModel {
 
     public String getIssuer() {
         return issuer;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
 }

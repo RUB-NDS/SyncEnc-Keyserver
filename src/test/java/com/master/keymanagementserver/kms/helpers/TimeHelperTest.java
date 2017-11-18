@@ -31,10 +31,10 @@ public class TimeHelperTest {
     @Before
     public void before() throws Exception {
         timeHelper = new TimeHelper();
-        userModel = new UserModel("pg@rub.de");
+        userModel = new UserModel("pg@rub.de", "identifier");
         challengeModel = new ChallengeModel("chall", userModel);
         oAuthModel = new OAuthModel("access", userModel);
-        authnRequestModel = new AuthnRequestModel("relay", "issuer");
+        authnRequestModel = new AuthnRequestModel("username", "relay", "issuer");
     }
 
     @After
@@ -146,7 +146,7 @@ public class TimeHelperTest {
     public void testCheckTimeValidityBeforeValidAuthnRequestModel() throws Exception {
         DateTime now = DateTime.now();
         TimeUnit.SECONDS.sleep(1);
-        AuthnRequestModel fastInvalid = new AuthnRequestModel("relay", "issuer", 10);
+        AuthnRequestModel fastInvalid = new AuthnRequestModel("username", "relay", "issuer", 10);
 
         assertFalse("", timeHelper.checkTimeValidity(now, fastInvalid));
     }
@@ -157,7 +157,7 @@ public class TimeHelperTest {
      */
     @Test
     public void testCheckTimeValidityNowAfterValidAuthnRequestModel() throws Exception {
-        AuthnRequestModel fastInvalid = new AuthnRequestModel("access", "issuer", 1);
+        AuthnRequestModel fastInvalid = new AuthnRequestModel("username", "access", "issuer", 1);
         TimeUnit.SECONDS.sleep(1);
 
         assertFalse("", timeHelper.checkTimeValidity(DateTime.now(), fastInvalid));

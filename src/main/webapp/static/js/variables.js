@@ -4,6 +4,8 @@ const crypto = window.crypto || window.msCrypto;
 // the salt and the secret needed for the password derivation
 let salt = null;
 let secret = 'aIB8eCQa19Zv6R1LLFsp7odaPQ+fnLgLzRcJ2TF95gM=';
+let password = null;
+let username = null;
 
 
 // variables for the communication with the KMS
@@ -23,7 +25,7 @@ const divId = 'myDiv';
 let div = null;
 
 const regExpID = new RegExp('^[a-zA-Z0-9]+={0,2}$');
-const regExpMail = new RegExp('^[\\w\\.\\-]+@[\\w\\.\\-]+\\.[a-zA-z]{2,5}$');
+const regExpUsername = new RegExp('^[\\w_\\d]+$');
 
 /**
  * variables for the Web Crypto API use
@@ -54,7 +56,6 @@ const symmExtractable = false;
 
 // variables for the key derivation function used to derive the wrapping key
 const kdfAlgo = 'PBKDF2';
-const kdfSaltString = 'aIB8eCQa19Zv6R1LLFsp7odaPQ+fnLgLzRcJ2TF95gM=';
 let kdfSalt = null;
 const kdfIterationen = 1000;
 const kdfImportedKeyUsage = ['deriveKey'];

@@ -13,7 +13,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 
 /**
@@ -38,7 +40,7 @@ public class OAuthHelperTest {
         MockitoAnnotations.initMocks(this);
         oAuthController = new OAuthController(oAuthRepository);
         oAuthHelper = new OAuthHelper(oAuthController, timeHelper);
-        UserModel userModel = new UserModel("pg@rub.de");
+        UserModel userModel = new UserModel("pg@rub.de", "identifer");
         oAuthModel = new OAuthModel("access", userModel);
     }
 

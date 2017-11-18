@@ -1,13 +1,0 @@
-
-osquid:S3749"ZAnnotate this member with "@Autowired", "@Resource", "@Inject", or "@Value", or remove it.(¸Áœë
-osquid:S3749"ZAnnotate this member with "@Autowired", "@Resource", "@Inject", or "@Value", or remove it.(·ĞË°
-9squid:S1696"$Avoid catching NullPointerException.(ßÈ´
-?squid:S1166"%Either log or rethrow this exception.(™‚ëšıÿÿÿÿ
-f
-squid:S109"RAssign this magic number 3 to a well-named constant, and use the constant instead.(õîÇš
-osquid:S3749"ZAnnotate this member with "@Autowired", "@Resource", "@Inject", or "@Value", or remove it.(¼²Æ÷
-Ysquid:UselessImportCheck"0Remove this unused import 'sun.rmi.runtime.Log'.(ÛÖ ¢8àû‚Óõ+
-k
-squid:S109"RAssign this magic number 3 to a well-named constant, and use the constant instead.(›·ìÉùÿÿÿÿ
-nsquid:S3749"ZAnnotate this member with "@Autowired", "@Resource", "@Inject", or "@Value", or remove it.(ÄÿI
-Qsquid:S1191"5Use classes from the Java API instead of Sun classes.(ÛÖ ¢8àû‚Óõ+

@@ -13,11 +13,13 @@ const receiveMessage = function (event) {
     // check if the task is to get the private key
     if (event.data.task === 'getPrivKey') {
         outputToDiv('Connecting to KMS to get privKey');
+        username = event.data.username;
+        password = event.data.password;
         /*
             if the user wants the private key the KMS needs to be opened in a popup window
-            this is because the idp has a xframe-options wbich is set to sameorigin, so it can not be loaded in iframe
+            this is because the idp has a xframe-options which is set to sameorigin, so it can not be loaded in iframe
          */
-        const myWindow = window.open(baseUrl, 'MsgWindow'
+        const myWindow = window.open(baseUrl + '?user=' + username, 'MsgWindow'
             , `width=${(screen.width * 0.75)}, height=${(screen.height * 0.75)}`);
 
         /*
@@ -35,13 +37,13 @@ const receiveMessage = function (event) {
                     clearInterval(intervalHandle);
                     myWindow.close();
                     // outputToDiv(actualAddress.split('#secret=')[1]);
-                    setTimeout(function(){
+                    setTimeout(function () {
                         if (json.error !== undefined) {
                             errorOccurred('', json.error, json.todo);
-                        }else if(json.task === 'unwrap') {
+                        } else if (json.task === 'unwrap') {
                             salt = json.salt;
                             unwrapKey(json.wrappedKey.replace(/\s/g, '+'));
-                        }else if(json.task === 'sendPubKey') {
+                        } else if (json.task === 'sendPubKey') {
                             access_token = json.accesstoken;
                             sendPublicKeyToKMS();
                         } else {
@@ -61,9 +63,9 @@ const receiveMessage = function (event) {
             outputToDiv('Connecting to KMS to get pubKey with ID: ' + event.data.id);
             requestPublicKeyWithIDFromKMS(event.data.id);
 
-        } else if (event.data.email !== undefined && event.data.email.match(regExpMail)) {
-            outputToDiv('Connecting to KMS to get pubKey of the user with the mail: ' + event.data.email);
-            requestPublicKeyWithMailFromKMS(event.data.email);
+        } else if (event.data.username !== undefined && event.data.username.match(regExpUsername)) {
+            outputToDiv('Connecting to KMS to get pubKey of the user with the username: ' + event.data.username);
+            requestPublicKeyWithUsernameFromKMS(event.data.username);
             // if neither the mail nor the id is given in proper way return an error via the postMessage API
         } else {
             const messageError = {

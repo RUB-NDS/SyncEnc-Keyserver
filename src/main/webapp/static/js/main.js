@@ -15,6 +15,9 @@ let div = null;
 const smaller = 'smaller';
 const bigger = 'bigger';
 
+let username = null;
+let password = null;
+
 /**
  * resize the iframe which contains the kms communicator
  * in case of communication with the kms the iframe is resized to a bigger size
@@ -58,6 +61,8 @@ const getPrivKey = function () {
     resizeIframe('bigger');
     const message = {
         'task': 'getPrivKey',
+        'username': username,
+        'password': password,
     };
     waitFor = 'privKey';
     iframeContentWindow.postMessage(message, partnerFullPathToFile);
@@ -80,17 +85,17 @@ const getPubKey = function () {
 };
 
 /**
- * called if the public key shozld be requested with the email input
+ * called if the public key shozld be requested with the username input
  * the iframe will be resized and made bigger
  * the kms communicator will be triggered with the postMessage-API call
  */
 const getPubKeyByUser = function () {
     outputToDiv('Send PostMessage to get PubKey');
     resizeIframe('bigger');
-    const mail = document.getElementById('email').value;
+    const usern = document.getElementById('usern').value;
     const message = {
         'task': 'getPubKey',
-        'email': mail,
+        'username': usern,
     };
     waitFor = 'pubKey';
     iframeContentWindow.postMessage(message, partnerFullPathToFile);
@@ -120,19 +125,36 @@ const receiveMessage = function (event) {
         resizeIframe(smaller);
         outputToDiv('ok i got my privKey ' + event.data.key);
 
-    // if the public key was sent, work with the public key
+        // if the public key was sent, work with the public key
     } else if (event.data.data === 'pubKey') {
         resizeIframe(smaller);
         outputToDiv('ok i got the pubKey ' + event.data.key);
 
-    // if an error was send provide the information to the user
+        // if an error was send provide the information to the user
     } else if (event.data.data === 'error') {
         outputToDiv('an error occured. ' + event.data.info);
 
-    // if none of the above conditions fulfill something unexpected happen
+        // if none of the above conditions fulfill something unexpected happen
     } else {
         outputToDiv('something unexpected happend.');
     }
 };
+
+/**
+ * change the site after the user logged in
+ * provide the table with the actions and make rest invisible
+ */
+function submitForm(){
+    const un = document.getElementById('username');
+    const pw = document.getElementById('password');
+    if (un.value !== '' && pw.value !== '') {
+        document.getElementById('tableDiv').style.display = 'block';
+        document.getElementById('loginDiv').style.display = 'none';
+        username = un.value;
+        password = pw.value;
+        document.getElementById('labelUsername').innerHTML = username;
+    }
+}
+
 // add a listener for the postMessage-API event
 window.addEventListener('message', receiveMessage, false);

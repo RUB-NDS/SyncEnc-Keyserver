@@ -308,13 +308,12 @@ const encryptChallenge = function (inputChall) {
  * calls reject if error occurred
  * result is assigned to derivedKey
  *
- * @param password provided by the user
  * @returns {Promise}
  */
-const deriveSymmKey = function (password) {
+const deriveSymmKey = function () {
     return new Promise(function (resolve, reject) {
-        const arrayBuffer = new Int8Array(textEncode((atob(secret) + atob(salt) + password)));
-        kdfSalt = new Uint8Array(textEncode(atob(kdfSaltString)));
+        const arrayBuffer = new Int8Array(textEncode((atob(secret) + password)));
+        kdfSalt = new Uint8Array(textEncode(atob(salt)));
         crypto.subtle.importKey(
             'raw',
             arrayBuffer,

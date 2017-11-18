@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import sun.rmi.runtime.Log;
 
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
@@ -52,7 +51,7 @@ public class CryptoUtils {
      * @return the generated public key, null if error occurred
      */
     static PublicKey generatePublicKeyOutOfPubKeyString(String pubKey) {
-        if(LOGGER.isDebugEnabled()){
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("generate public key out of the string {}"
                     , LogEncoderHelper.encodeLogEntry(pubKey));
         }
@@ -65,7 +64,7 @@ public class CryptoUtils {
             Algorithm algo = new Algorithm(jsonObject.getAsString("alg"));
             KeyUse keyUse = KeyUse.ENCRYPTION;
             Set<KeyOperation> ops = EnumSet.of(KeyOperation.ENCRYPT);
-            if(LOGGER.isDebugEnabled()){
+            if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("with modulus {} and public exponent {}"
                         , LogEncoderHelper.encodeLogEntry(n.decodeToString())
                         , LogEncoderHelper.encodeLogEntry(e.decodeToString()));
@@ -90,7 +89,7 @@ public class CryptoUtils {
      * @return byte-array of the encrypted challenge, null if error occurred
      */
     public static byte[] encryptChallenge(String challenge, String pubKey) {
-        if(LOGGER.isDebugEnabled()){
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("encrypt the challenge {} with the pubKeyString {}"
                     , LogEncoderHelper.encodeLogEntry(challenge)
                     , LogEncoderHelper.encodeLogEntry(pubKey));
@@ -100,14 +99,14 @@ public class CryptoUtils {
             if (publicKey == null) {
                 return null;
             }
-            if(LOGGER.isDebugEnabled()){
+            if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("Add Bouncy Castle Provider");
             }
             Security.addProvider(new BouncyCastleProvider());
             Cipher cipher = Cipher.getInstance(CRYPT_VERFAHREN);
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
             byte[] challBytes = ConversionHelper.base64DecodeToBytes(new Base64(challenge));
-            if(LOGGER.isDebugEnabled()){
+            if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("return encrypted challenge");
             }
             return cipher.doFinal(challBytes);
@@ -126,7 +125,7 @@ public class CryptoUtils {
      * @return the hashed string
      */
     public String hashInput(String input) {
-        if(LOGGER.isDebugEnabled()){
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("hash the input {}"
                     , LogEncoderHelper.encodeLogEntry(input));
         }
@@ -134,7 +133,7 @@ public class CryptoUtils {
             MessageDigest md = MessageDigest.getInstance("SHA-512");
             byte[] hashedBytes = md.digest(input.getBytes(StandardCharsets.UTF_8));
 
-            if(LOGGER.isDebugEnabled()){
+            if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("build a string from the hash");
             }
             StringBuilder sb = new StringBuilder();

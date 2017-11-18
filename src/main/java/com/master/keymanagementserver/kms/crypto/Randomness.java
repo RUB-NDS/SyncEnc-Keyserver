@@ -30,7 +30,7 @@ public class Randomness {
      * @return byte array with generated random bytes
      */
     public byte[] generateRandomBytes(Integer length) {
-        if(LOGGER.isDebugEnabled()){
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Generate {} random bytes."
                     , LogEncoderHelper.encodeLogEntry(length.toString()));
         }
@@ -55,7 +55,7 @@ public class Randomness {
      * @return base64 encoded token string
      */
     public String generateTokenWithDate(String input, Integer randLength) {
-        if(LOGGER.isDebugEnabled()){
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("generate Token with date included.");
         }
 
@@ -75,8 +75,8 @@ public class Randomness {
      * @return base64 encoded string
      */
     public String generateTokenWithoutDate(String input, Integer randLength) {
-        if(LOGGER.isDebugEnabled()){
-            LOGGER.debug("generate TOken without date included");
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("generate Token without date included");
         }
 
         String random = ConversionHelper.bytesToHex(generateRandomBytes(randLength));

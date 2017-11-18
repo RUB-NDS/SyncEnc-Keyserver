@@ -68,7 +68,7 @@ public class OAuthModel {
 
         // the token needs to be unguessable so the id will be generated randomly
         Randomness randomness = new Randomness();
-        this.tokenId = randomness.generateTokenWithoutDate(userModel.getEmail(), 32);
+        this.tokenId = randomness.generateTokenWithoutDate(userModel.getUsername(), 32);
 
         this.tokenType = tokenType;
         this.userModel = userModel;

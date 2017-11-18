@@ -33,21 +33,21 @@ public class AuthnRequestController {
      * @param issuer     issuer of the authnRequest
      * @return created authnRequestModel, null if error occurred
      */
-    public AuthnRequestModel createAuthnRequest(String relayState, String issuer) {
+    public AuthnRequestModel createAuthnRequest(String username, String relayState, String issuer) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("create AuthnRequest with relayState '{}' and issuer '{}'"
                     , LogEncoderHelper.encodeLogEntry(relayState)
                     , LogEncoderHelper.encodeLogEntry(issuer));
         }
         // try to save authnRequestModel
-        AuthnRequestModel authnRequestModel = new AuthnRequestModel(relayState, issuer);
+        AuthnRequestModel authnRequestModel = new AuthnRequestModel(username, relayState, issuer);
         try {
             authnRequestRepository.save(authnRequestModel);
         } catch (DataIntegrityViolationException e) {
             // try second time if the first fails
             LOGGER.warn("Created ID already exists, try to get new one.", e);
 
-            authnRequestModel = new AuthnRequestModel(relayState, issuer);
+            authnRequestModel = new AuthnRequestModel(username, relayState, issuer);
             try {
                 authnRequestRepository.save(authnRequestModel);
             } catch (DataIntegrityViolationException ex) {
@@ -70,12 +70,12 @@ public class AuthnRequestController {
      */
     public boolean deleteAllOldAuthnRequest(Date now) {
         LOGGER.info("Delete all old AuthnRequests.");
-        if(LOGGER.isDebugEnabled()){
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("All being before: {}", LogEncoderHelper.encodeLogEntry(now.toString()));
         }
 
         Iterable<AuthnRequestModel> authnRequestModelIterable = authnRequestRepository
-                .findAuthnRequestsByNotValidAfterBefore(now);
+                .findAuthnRequestsByNotValidAfterIsBefore(now);
 
         for (AuthnRequestModel authnRequestModel : authnRequestModelIterable) {
             LOGGER.info("AuthnRequest with ID {} was old and so deleted", authnRequestModel.getId());

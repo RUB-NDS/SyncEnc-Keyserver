@@ -85,10 +85,9 @@ const gotWrappedKey = function () {
  * the imported key will be send via the postMessage-API
  * @param wrappedKey
  */
-const unwrapKey = function(wrappedKey) {
+const unwrapKey = function (wrappedKey) {
     wrappedKeyFromKMS = wrappedKey;
-    const password = prompt('Please insert your password for key derivation');
-    deriveSymmKey(password).then(function () {
+    deriveSymmKey().then(function () {
         unwrapPrivKeyWithAES().then(function () {
             outputToDiv('the private key is now unwrapped and can be used.');
             const messagePrivKey = {
@@ -127,8 +126,7 @@ const solvedChallenge = function () {
         errorOccurred('solvedChallenge', response.error, response.todo);
     } else {
         salt = response.salt;
-        const password = prompt('Please insert your password for key derivation.');
-        deriveSymmKey(password).then(function () {
+        deriveSymmKey().then(function () {
             wrapPrivKeyWithAES().then(function () {
                 sendWrappedKeyToKMS();
             }, function (error) {
@@ -235,8 +233,8 @@ const requestPublicKeyWithIDFromKMS = function (keynameid) {
  *
  * @param mail the mail of the user
  */
-const requestPublicKeyWithMailFromKMS = function (mail) {
-    openXHRWithOutBearer('GET', '/get_public_key?mail=' + mail);
+const requestPublicKeyWithUsernameFromKMS = function (usern) {
+    openXHRWithOutBearer('GET', '/get_public_key?username=' + usern);
     xhr.addEventListener('load', getPublicKeyByKMS);
     xhr.send();
 };

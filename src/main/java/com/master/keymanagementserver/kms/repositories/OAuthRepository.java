@@ -21,5 +21,5 @@ public interface OAuthRepository extends CrudRepository<OAuthModel, Long> {
 
     OAuthModel findOAuthModelByUserModel(UserModel userModel);
 
-    Iterable<OAuthModel> findOAuthModelsByNotValidAfterBefore(Date date);
+    Iterable<OAuthModel> findOAuthModelsByNotValidAfterIsBefore(Date date);
 }

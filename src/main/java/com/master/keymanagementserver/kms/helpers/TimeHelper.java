@@ -27,7 +27,7 @@ class TimeHelper {
      * true otherwise
      */
     boolean checkTimeValidity(DateTime testDateTime, Object object) {
-        if(LOGGER.isDebugEnabled()){
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("check the dateTime {}"
                     , LogEncoderHelper.encodeLogEntry(testDateTime.toString()));
         }
@@ -54,7 +54,7 @@ class TimeHelper {
 
             return false;
         }
-        if(LOGGER.isDebugEnabled()){
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("should be in range {} - {}"
                     , LogEncoderHelper.encodeLogEntry(notValidBefore.toString())
                     , LogEncoderHelper.encodeLogEntry(notValidAfter.toString()));
@@ -81,7 +81,7 @@ class TimeHelper {
             return false;
         }
 
-        if(LOGGER.isDebugEnabled()){
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("everything is valid.");
         }
 

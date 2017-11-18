@@ -17,7 +17,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import java.util.Arrays;
 import java.util.Date;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 
 /**
@@ -43,7 +46,7 @@ public class ChallengeControllerTest {
     @Before
     public void before() throws Exception {
         MockitoAnnotations.initMocks(this);
-        userModel = new UserModel("pg@rub.de");
+        userModel = new UserModel("pg@rub.de", "identifier");
         challengeController = new ChallengeController(challengeRepository, randomness, cryptoUtils);
         challengeModel = new ChallengeModel("chall", userModel);
     }
@@ -99,7 +102,7 @@ public class ChallengeControllerTest {
         ChallengeModel[] array = {fastInvalid};
         Iterable<ChallengeModel> iterable = Arrays.asList(array);
         Date input = DateTime.now().minusSeconds(5).toDate();
-        Mockito.when(challengeRepository.findChallengesByNotValidAfterBefore(input)).thenReturn(iterable);
+        Mockito.when(challengeRepository.findChallengesByNotValidAfterIsBefore(input)).thenReturn(iterable);
 
         assertTrue("", challengeController.deleteOldChallenges(input));
     }

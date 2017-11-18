@@ -1,11 +1,0 @@
-
-isquid:S1142"MReduce the number of returns of this method 8, down to the maximum allowed 3.(ÑÜ›8®şÓõ+
-®squid:S1200"‘Split this class into smaller and more specialized ones to reduce its dependencies on other classes from 21 to the maximum authorized 20 or less.(–»À¹8’§öÑõ+
-i
-squid:S134"NRefactor this code to not nest more than 3 if/for/while/switch/try statements.(îû™¼8®şÓõ+
-nsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 21 to the 15 allowed.(ÑÜ›8Æ¦€Ôõ+
-ysquid:S3242"]Use 'javax.servlet.ServletRequest' here; it is a more general type than 'HttpServletRequest'.(ÑÜ›8®şÓõ+
-gsquid:S1192"KDefine a constant instead of duplicating this literal "RelayState" 3 times.(…òßü8®şÓõ+
-@squid:S1696"$Avoid catching NullPointerException.(ßÈ´8®şÓõ+
-™ squid:MethodCyclomaticComplexity"hThe Cyclomatic Complexity of this method "parseAuthnResponse" is 18 which is greater than 10 authorized.(ÑÜ›8®şÓõ+
-psquid:S2259"OA "NullPointerException" could be thrown; "authnRequestModel" is nullable here.(ÍÁòşÿÿÿÿ8¡İ…Ôõ+

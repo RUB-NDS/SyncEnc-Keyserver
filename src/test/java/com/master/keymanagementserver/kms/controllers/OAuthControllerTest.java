@@ -1,6 +1,5 @@
 package com.master.keymanagementserver.kms.controllers;
 
-import com.master.keymanagementserver.kms.helpers.UserStates;
 import com.master.keymanagementserver.kms.models.OAuthModel;
 import com.master.keymanagementserver.kms.models.UserModel;
 import com.master.keymanagementserver.kms.repositories.OAuthRepository;
@@ -16,7 +15,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import java.util.Arrays;
 import java.util.Date;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 
 /**
@@ -37,7 +39,7 @@ public class OAuthControllerTest {
     @Before
     public void before() throws Exception {
         MockitoAnnotations.initMocks(this);
-        userModel = new UserModel("pg@rub.de");
+        userModel = new UserModel("pg@rub.de", "identifier");
         oAuthController = new OAuthController(oAuthRepository);
         oAuthModel = new OAuthModel("access", userModel);
     }
@@ -113,7 +115,7 @@ public class OAuthControllerTest {
         OAuthModel[] array = {fastInvalid};
         Iterable<OAuthModel> iterable = Arrays.asList(array);
         Date input = DateTime.now().minusSeconds(5).toDate();
-        Mockito.when(oAuthRepository.findOAuthModelsByNotValidAfterBefore(input)).thenReturn(iterable);
+        Mockito.when(oAuthRepository.findOAuthModelsByNotValidAfterIsBefore(input)).thenReturn(iterable);
 
         assertTrue("", oAuthController.deleteOldTokens(input));
     }

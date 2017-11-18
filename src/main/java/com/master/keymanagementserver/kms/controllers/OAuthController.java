@@ -35,16 +35,16 @@ public class OAuthController {
      * @return the created OAuthModel, null if error occurred
      */
     OAuthModel createOAuthTokenForUser(UserModel userModel, String tokenType) {
-        if(LOGGER.isDebugEnabled()){
-            LOGGER.debug("create token with type {} for user {}"
-                    , LogEncoderHelper.encodeLogEntry(tokenType)
-                    , LogEncoderHelper.encodeLogEntry(userModel.getEmail()));
-        }
         // if no userModel provided return null
         if (userModel == null) {
             LOGGER.warn(ERROR_NO_USER_MODEL_GIVEN);
 
             return null;
+        }
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("create token with type {} for user {}"
+                    , LogEncoderHelper.encodeLogEntry(tokenType)
+                    , LogEncoderHelper.encodeLogEntry(userModel.getUsername()));
         }
         // Create new OAuthModel, if exception is thrown return null
         OAuthModel oAuthModel = new OAuthModel(tokenType, userModel);
@@ -66,7 +66,7 @@ public class OAuthController {
      * @return OAuthModel with the provided tokenId, null if error occurred
      */
     public OAuthModel getOAuthTokenByTokenId(String oAuthTokenId) {
-        if(LOGGER.isDebugEnabled()){
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("get token with id {}"
                     , LogEncoderHelper.encodeLogEntry(oAuthTokenId));
         }
@@ -98,22 +98,22 @@ public class OAuthController {
      * @return the OAuthModel which was created or found, null if error occured
      */
     public OAuthModel getOAuthToken(UserModel userModel) {
-        if(LOGGER.isDebugEnabled()){
-            LOGGER.debug("get token for user {}"
-                    , LogEncoderHelper.encodeLogEntry(userModel.getEmail()));
-        }
         if (userModel == null) {
             LOGGER.warn(ERROR_NO_USER_MODEL_GIVEN);
             return null;
         }
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("get token for user {}"
+                    , LogEncoderHelper.encodeLogEntry(userModel.getUsername()));
+        }
 
-        if(LOGGER.isDebugEnabled()){
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("first search it");
         }
         // if no token exists, create a new one
         OAuthModel oAuthModel = searchOAuthModel(userModel);
         if (oAuthModel == null) {
-            if(LOGGER.isDebugEnabled()){
+            if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("if not exists create it");
             }
             oAuthModel = createOAuthTokenForUser(userModel, "access");
@@ -129,14 +129,14 @@ public class OAuthController {
      * @return the found token for userModel, null error occurred
      */
     OAuthModel searchOAuthModel(UserModel userModel) {
-        if(LOGGER.isDebugEnabled()){
-            LOGGER.debug("search token for user {}"
-                    , LogEncoderHelper.encodeLogEntry(userModel.getEmail()));
-        }
         if (userModel == null) {
             LOGGER.error(ERROR_NO_USER_MODEL_GIVEN);
 
             return null;
+        }
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("search token for user {}"
+                    , LogEncoderHelper.encodeLogEntry(userModel.getUsername()));
         }
 
         // return null if no token for the user found
@@ -144,7 +144,7 @@ public class OAuthController {
         try {
             oAuthModel = oAuthRepository.findOAuthModelByUserModel(userModel);
         } catch (NullPointerException e) {
-            LOGGER.info("No oAuthModel found for the User {}", userModel.getEmail());
+            LOGGER.info("No oAuthModel found for the User {}", userModel.getUsername());
 
             return null;
         }
@@ -161,15 +161,15 @@ public class OAuthController {
      */
     public boolean deleteOldTokens(Date now) {
         LOGGER.info("Delete all old OAuthToken.");
-        if(LOGGER.isDebugEnabled()){
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("All being before: {}"
                     , now);
         }
 
-        Iterable<OAuthModel> oAuthIterable = oAuthRepository.findOAuthModelsByNotValidAfterBefore(now);
+        Iterable<OAuthModel> oAuthIterable = oAuthRepository.findOAuthModelsByNotValidAfterIsBefore(now);
 
         for (OAuthModel oAuthModel : oAuthIterable) {
-            LOGGER.info("OAuthToken for user ({}) was old and so deleted", oAuthModel.getUserModel().getEmail());
+            LOGGER.info("OAuthToken for user ({}) was old and so deleted", oAuthModel.getUserModel().getUsername());
             oAuthRepository.delete(oAuthModel);
         }
 

@@ -16,5 +16,5 @@ public interface AuthnRequestRepository extends CrudRepository<AuthnRequestModel
 
     AuthnRequestModel findAuthnRequestById(String id);
 
-    Iterable<AuthnRequestModel> findAuthnRequestsByNotValidAfterBefore(Date date);
+    Iterable<AuthnRequestModel> findAuthnRequestsByNotValidAfterIsBefore(Date date);
 }

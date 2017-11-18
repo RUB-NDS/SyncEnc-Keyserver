@@ -1,8 +1,0 @@
-
-;squid:S1168"&Return an empty array instead of null.(¥¹ï
-›squid:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ÚŒü¬úÿÿÿÿ
-Qsquid:S1191"5Use classes from the Java API instead of Sun classes.(ÛÖ ¢8âóÄÓõ+
-Ysquid:UselessImportCheck"0Remove this unused import 'sun.rmi.runtime.Log'.(ÛÖ ¢8âóÄÓõ+
-g
-squid:S109"SAssign this magic number 16 to a well-named constant, and use the constant instead.(¾İÕ³
-;squid:S1168"&Return an empty array instead of null.(¥¹ï

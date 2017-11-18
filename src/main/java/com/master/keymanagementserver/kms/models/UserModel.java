@@ -21,12 +21,16 @@ public class UserModel {
     @Basic(optional = false)
     private Long id;
 
-    // each email address should be unique
+    // each username should be unique
     @Basic(optional = false)
     @NotNull
     @Column(unique = true)
-    private String email;
-
+    private String username;
+    // each username should be unique
+    @Basic(optional = false)
+    @NotNull
+    @Column(unique = true)
+    private String stringIdIdP;
     @Column(length = 4096)
     private String publicKey;
     @Column(unique = true)
@@ -34,23 +38,29 @@ public class UserModel {
     private String salt;
     @Column(length = 8192)
     private String wrappedKey;
-
     @NotNull
     @Enumerated(EnumType.STRING)
     private UserStates state;
-
-
     protected UserModel() {
     }
 
-    public UserModel(String email) {
-        this.email = email;
+    public UserModel(String username, String stringIdIdP) {
+        this.username = username;
+        this.stringIdIdP = stringIdIdP;
 
         /*
             the default state is the SENDPUBKEY state
             this will be changed in the application, due to what is stored in the database
          */
         this.state = UserStates.SENDPUBKEY;
+    }
+
+    public String getStringIdIdP() {
+        return stringIdIdP;
+    }
+
+    public void setStringIdIdP(String stringIdIdP) {
+        this.stringIdIdP = stringIdIdP;
     }
 
     public Long getId() {
@@ -65,12 +75,12 @@ public class UserModel {
         this.keyNameIdentifier = keyNameIdentifier;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUsername() {
+        return username;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getWrappedKey() {
