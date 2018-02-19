@@ -1,5 +1,6 @@
 target/
-!.mvn/wrapper/maven-wrapper.jar
+javadoc/
+.mvn/
 
 ### STS ###
 .apt_generated
@@ -8,6 +9,7 @@ target/
 .project
 .settings
 .springBeans
+.scannerwork
 
 ### IntelliJ IDEA ###
 .idea
