@@ -1,0 +1,24 @@
+table#getKeysTable {
+    font-size: 16px;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+}
+
+#getKeysTable td, #getKeysTable th {
+    border: 1.5px solid #383838;
+    text-align: left;
+    padding: 8px;
+}
+
+#getKeysTable tr:nth-child(even) {
+    background-color: #f2f2f2
+}
+
+#getKeysTable th {
+    padding-top: 11px;
+    padding-bottom: 11px;
+    background-color: #4CAF50;
+    color: white;
+}
