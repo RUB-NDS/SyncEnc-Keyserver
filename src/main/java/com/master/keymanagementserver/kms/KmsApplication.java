@@ -55,8 +55,15 @@ public class KmsApplication {
                     @Override
                     protected void postProcessContext(Context context) {
                         SecurityConstraint securityConstraint = new SecurityConstraint();
-                        securityConstraint.setUserConstraint("CONFIDENTIAL");
+                        securityConstraint.setUserConstraint("NONE");
                         SecurityCollection collection = new SecurityCollection();
+                        collection.addPattern("/.well-known/*");
+                        securityConstraint.addCollection(collection);
+                        context.addConstraint(securityConstraint);
+
+                        securityConstraint = new SecurityConstraint();
+                        securityConstraint.setUserConstraint("CONFIDENTIAL");
+                        collection = new SecurityCollection();
                         collection.addPattern("/*");
                         securityConstraint.addCollection(collection);
                         context.addConstraint(securityConstraint);
