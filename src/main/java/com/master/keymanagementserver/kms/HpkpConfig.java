@@ -14,7 +14,7 @@ public class HpkpConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.headers()
+        /*http.headers()
                 .httpPublicKeyPinning()
                 .maxAgeInSeconds(MAX_AGE_IN_SECONDS)
                 .addSha256Pins(
@@ -29,11 +29,12 @@ public class HpkpConfig extends WebSecurityConfigurerAdapter {
                 )
                 .reportOnly(false)
                 // .reportUri("http://example.net/hpkp-report")
-                .includeSubDomains(true);
+                .includeSubDomains(true);*/
 
         // allow that the KMS can be iframed from the same origin
-        http.headers()
-                .addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN));
+        // http.headers()
+                //.addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN));
+        http.headers().frameOptions().disable();
 
         // disable csrf it is not needed due to the lack of form fields
         http.csrf().disable();
