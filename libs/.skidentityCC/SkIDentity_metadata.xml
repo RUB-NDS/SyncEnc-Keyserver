@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
-                     entityID="https://service.skidentity.de/fs/saml/metadata" validUntil="2018-02-01T09:00:00.000Z">
+                     entityID="https://service.skidentity.de/fs/saml/metadata" validUntil="2033-02-01T09:00:00.000Z">
     <md:IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
         <md:KeyDescriptor use="signing">
             <ns8:KeyInfo xmlns:ns8="http://www.w3.org/2000/09/xmldsig#">
