@@ -5,9 +5,11 @@
  * @param event the event that triggered this message call, contains the data send via postMessage
  */
 const receiveMessage = function (event) {
-    if (event.origin !== partnerDomain) {
+    if (event.origin !== partnerDomain && event.origin !== 'http://localhost:3000') {
+	console.log("Message received from :" + event.origin);
         return;
     }
+    console.log("Message received");
     postMessageOrigin = event.origin;
 
     // check if the task is to get the private key

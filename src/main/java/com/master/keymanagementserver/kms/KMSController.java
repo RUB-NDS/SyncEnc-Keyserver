@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -107,6 +108,7 @@ class KMSController {
      * @return Redirect to IdP
      * @throws URISyntaxException throws Exception if redirect URL is not a valid URI
      */
+    @CrossOrigin(origins = "https://dom.dpdns.ovh:3000/")
     @RequestMapping(value = "", method = RequestMethod.GET)
     ResponseEntity<Object> getIdpRedirect(HttpServletRequest request) throws URISyntaxException {
         LOGGER.info("GET /KMS");
@@ -142,6 +144,7 @@ class KMSController {
      * @param request contains the Assertion
      * @return a JSON-string depending on state in the database
      */
+    @CrossOrigin(origins = {"https://dom.dpdns.ovh:3000/", "https://service.skidentity.de"})
     @RequestMapping(value = "/ACS", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     String postACS(HttpServletRequest request) {
@@ -236,6 +239,7 @@ class KMSController {
      * @param request the request which will hold the parameters
      * @return a JSON-string with an error or the requested public key
      */
+    @CrossOrigin(origins = "https://dom.dpdns.ovh:3000/")
     @RequestMapping(value = "/get_public_key", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     String postPublicKeyToUser(HttpServletRequest request) {
@@ -290,6 +294,7 @@ class KMSController {
      *
      * @return just an emtpy string
      */
+    @CrossOrigin(origins = "https://dom.dpdns.ovh:3000/")
     @RequestMapping(value = "/send_pub_key", method = RequestMethod.OPTIONS)
     @ResponseBody
     String optionsPublicKeyFromUser() {
@@ -306,6 +311,7 @@ class KMSController {
      * @param Authorization contains the Authorization header with the bearer token
      * @return a JSON-string with an error or the encrypted challenge
      */
+    @CrossOrigin(origins = "https://dom.dpdns.ovh:3000/")
     @RequestMapping(value = "/send_pub_key", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     String postPublicKeyFromUser(HttpServletRequest request, @RequestHeader String Authorization) {
@@ -384,6 +390,7 @@ class KMSController {
      *
      * @return just an emtpy string
      */
+    @CrossOrigin(origins = "https://dom.dpdns.ovh:3000/")
     @RequestMapping(value = "/solve_challenge", method = RequestMethod.OPTIONS)
     @ResponseBody
     String optionsSolveChallenge() {
@@ -400,6 +407,7 @@ class KMSController {
      * @param Authorization contains the Authorization header with the bearer token
      * @return a JSON-string with an error or the salt
      */
+    @CrossOrigin(origins = "https://dom.dpdns.ovh:3000/")
     @RequestMapping(value = "/solve_challenge", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     String postSolveChallenge(HttpServletRequest request, @RequestHeader String Authorization) {
@@ -451,6 +459,7 @@ class KMSController {
      *
      * @return just an emtpy string
      */
+    @CrossOrigin(origins = "https://dom.dpdns.ovh:3000/")
     @RequestMapping(value = "/send_wrapped_key", method = RequestMethod.OPTIONS)
     @ResponseBody
     String optionsWrappedKeyFromUser() {
@@ -467,6 +476,7 @@ class KMSController {
      * @param Authorization contains the Authorization header with the bearer token
      * @return JSON-string with task=ready or with an error
      */
+    @CrossOrigin(origins = "https://dom.dpdns.ovh:3000/")
     @RequestMapping(value = "/send_wrapped_key", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     String postWrappedKeyFromUser(HttpServletRequest request, @RequestHeader String Authorization) {
@@ -513,6 +523,7 @@ class KMSController {
      *
      * @return any string
      */
+    @CrossOrigin(origins = "https://dom.dpdns.ovh:3000/")
     @RequestMapping(value = "/justTesting", method = RequestMethod.GET, produces = "text/html")
     @ResponseBody
     String justTestingGET(@RequestParam(value = "name", defaultValue = "") String name) throws UnknownHostException, UnsupportedEncodingException, UnmarshallingException, XMLParserException, ComponentInitializationException, ResolverException, SignatureException, CertificateException {
@@ -529,6 +540,7 @@ class KMSController {
      *
      * @return any string
      */
+    @CrossOrigin(origins = "https://dom.dpdns.ovh:3000/")
     @RequestMapping(value = "/justTesting", method = RequestMethod.POST, produces = "text/html")
     @ResponseBody
     String justTestingPOST(@RequestParam(value = "name", defaultValue = "") String name) {
