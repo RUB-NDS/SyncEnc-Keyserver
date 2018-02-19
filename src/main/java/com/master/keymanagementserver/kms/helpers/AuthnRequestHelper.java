@@ -58,7 +58,7 @@ public class AuthnRequestHelper {
     private final AuthnRequestController authnRequestController;
     private String idpURL;
     // the URL of the AuthnRequestIssuer
-    private String issuerURL = "https://neon.cloud.nds.rub.de/KMS";
+    private String issuerURL = "http://neon.cloud.nds.rub.de/KMS";
     // the URL of the AuthnRequestConsumer
     private String consumerUrl = "https://neon.cloud.nds.rub.de/KMS/ACS";
 
