@@ -65,7 +65,7 @@ const hashAlgoKDF = 'SHA-512';
 // variables for the asymmetric algorithm used for encryption and decryption
 const asymmAlgo = 'RSA-OAEP';
 const asymmExtractable = true;
-const asymmUsage = ['encrypt', 'decrypt'];
+const asymmUsage = ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'];
 const asymmAlgoModulusLength = 4096;
 const asymmAlgoPublicKey = new Uint8Array([0x01, 0x00, 0x01]);
 const hashAlgoRSA = 'SHA-256';

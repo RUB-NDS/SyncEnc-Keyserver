@@ -85,7 +85,7 @@ const importPublicKey = function (publicKey) {
             hash: {name: hashAlgoRSA},
         },
         true,
-        ['encrypt']
+        ['encrypt','wrapKey']
     ).then(function (impPubKey) {
         importedPubKey = impPubKey;
     });
@@ -241,7 +241,7 @@ const unwrapPrivKeyWithAES = function () {
                 hash: {name: hashAlgoRSA},
             },
             true,
-            ['decrypt']
+            ['decrypt','unwrapKey']
         ).then(function (unwrappedKey) {
             importedPrivKey = unwrappedKey;
             resolve('Success!');
