@@ -77,9 +77,15 @@ const exportPubKeyAsJWK = function () {
  * @returns {Promise.<TResult>}
  */
 const importPublicKey = function (publicKey) {
+    let tmpPubKey = JSON.parse(atob(publicKey));
+    if(tmpPubKey.key_ops.indexOf('wrapKey') === -1){
+       tmpPubKey.key_ops.push('wrapKey');
+    }
+
     return crypto.subtle.importKey(
         formatExport,
         JSON.parse(atob(publicKey)),
+        tmpPubKey,
         {
             name: asymmAlgo,
             hash: {name: hashAlgoRSA},

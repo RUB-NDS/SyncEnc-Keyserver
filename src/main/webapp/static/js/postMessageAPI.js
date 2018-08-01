@@ -5,8 +5,10 @@
  * @param event the event that triggered this message call, contains the data send via postMessage
  */
 const receiveMessage = function (event) {
-    if (event.origin !== partnerDomain && event.origin !== 'http://localhost:3000') {
-	console.log("Message received from :" + event.origin);
+    if (event.origin !== partnerDomain && event.origin !== 'https://dom.dpdns.ovh:8000' &&
+       event.origin !== 'https://argon.cloud.nds.rub.de:8080' &&
+       event.origin !== 'https://localhost:8080') {
+       console.log("Message received from unallowed origin:" + event.origin);
         return;
     }
     console.log("Message received");
