@@ -93,7 +93,7 @@ const errorOccurred = function (func, errorMessage, todostring) {
     outputToDiv(errorString);
     const messageError = {
         'data': 'error',
-        'info': 'An error occured on the server.',
+        'info': errorMessage,
     };
 
     responseToParent(messageError);
