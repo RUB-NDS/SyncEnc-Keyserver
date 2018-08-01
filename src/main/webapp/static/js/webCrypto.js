@@ -84,7 +84,6 @@ const importPublicKey = function (publicKey) {
 
     return crypto.subtle.importKey(
         formatExport,
-        JSON.parse(atob(publicKey)),
         tmpPubKey,
         {
             name: asymmAlgo,
